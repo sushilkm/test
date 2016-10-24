@@ -9,7 +9,7 @@
             "name": "hsm-side-car",
             "workload_type": "container",
             "repository": "docker.io",
-            "organization": "stackatodev",
+            "organization": "stackato",
             "image": "hsm-sidecar-dev-mssql",
             "tag": "1.0.8-0-gdea46d6",
             "min_RAM_mb": 50,

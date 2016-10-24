@@ -8,7 +8,7 @@
         {
             "name": "hsm-side-car",
             "repository": "docker.io",
-            "organization": "stackatodev",
+            "organization": "stackato",
             "image": "hsm-sidecar",
             "tag": "1.0.8-0-gdea46d6",
             "min_RAM_mb": 50,

@@ -1,0 +1,2955 @@
+{
+  "name": "hcp",
+  "product_version": "4.0.0",
+  "sdl_version": "0.9.15-0-g040a44a",
+  "vendor": "HPE",
+  "parameters": [
+    {
+      "name": "KUBERNETES_VERSION",
+      "description": "Kubernetes version in use",
+      "required": true
+    },
+    {
+      "name": "NTP_SERVERS",
+      "description": "Comma-delimited list of ntp servers to use",
+      "required": true
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Log level of ipmgr",
+      "default": "DEBUG"
+    },
+    {
+      "name": "LOGSTASH_HOST",
+      "description": "Logstash host",
+      "default": ""
+    },
+    {
+      "name": "LOGSTASH_PORT",
+      "description": "Logstash port",
+      "default": ""
+    },
+    {
+      "name": "CLUSTER_ID",
+      "description": "Cluster ID, set during bootstrap",
+      "required": true
+    },
+    {
+      "name": "INSECURE_REGISTRY",
+      "description": "Docker insecure registry",
+      "default": ""
+    },
+    {
+      "name": "RPMGR_DOCKER_VERSION",
+      "description": "Docker Version for rpmgr",
+      "default": "1.12.0-0~trusty"
+    },
+    {
+      "name": "RPMGR_PROVIDER",
+      "description": "IaaS Provider for RPMGR",
+      "default": "local"
+    },
+    {
+      "name": "DEBUG_NET",
+      "description": "If true will log all IPMGR HTTPS connection handshake errors.",
+      "default": "false"
+    },
+    {
+      "name": "IPMGR_PROVIDER",
+      "description": "IaaS Provider for IPMGR",
+      "default": "local"
+    },
+    {
+      "name": "AWS_REGION",
+      "description": "The AWS region",
+      "default": "us-west-2"
+    },
+    {
+      "name": "AWS_AVAILABILITY_ZONES",
+      "description": "The AWS AZ",
+      "default": "a"
+    },
+    {
+      "name": "AWS_MASTER_INSTANCE_TYPE",
+      "description": "The AWS master instance type to use",
+      "default": "t2.medium"
+    },
+    {
+      "name": "AWS_NODE_INSTANCE_TYPE",
+      "description": "The AWS node instance type to use",
+      "default": "t2.large"
+    },
+    {
+      "name": "AWS_GLUSTERFS_INSTANCE_TYPE",
+      "description": "The AWS GlusterFS instance type to use",
+      "default": "t2.medium"
+    },
+    {
+      "name": "AWS_WINDOWS2012R2_INSTANCE_TYPE",
+      "description": "The AWS Windows 2012R2 instance type to use",
+      "default": "t2.large"
+    },
+    {
+      "name": "AWS_LINUX_AMI",
+      "description": "The AWS Linux AMI to use for Ubuntu 14.04.3",
+      "default": "ami-9abea4fb"
+    },
+    {
+      "name": "AWS_WINDOWS2012R2_AMI",
+      "description": "The AWS AMI to use for Microsoft Windows Server 2012R2",
+      "default": "ami-123123123"
+    },
+    {
+      "name": "AWS_KEYPAIR",
+      "description": "The AWS keypair name",
+      "default": ""
+    },
+    {
+      "name": "AWS_VPC_ID",
+      "description": "The AWS VPC ID"
+    },
+    {
+      "name": "AWS_ACCESS_KEY_ID",
+      "description": "The AWS Access Key ID to use",
+      "default": ""
+    },
+    {
+      "name": "AWS_SECRET_KEY_FILE",
+      "description": "The AWS secret key file on disk",
+      "default": "/etc/secrets/aws-secret-key"
+    },
+    {
+      "name": "AWS_KEYPAIR_FILE",
+      "description": "The AWS keypair file on disk",
+      "default": "/etc/secrets/keypair"
+    },
+    {
+      "name": "AWS_JUMPBOX_CIDR",
+      "description": "The AWS jumpbox CIDR",
+      "default": "0.0.0.0/0"
+    },
+    {
+      "name": "AWS_PUBLIC_SUBNET_IDS_AND_AZ",
+      "description": "The AWS Public subnet ID"
+    },
+    {
+      "name": "AWS_PRIVATE_SUBNET_IDS_AND_AZ",
+      "description": "The AWS Private subnet ID"
+    },
+    {
+      "name": "AWS_MASTER_POLICY_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_MASTER_ROLE_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_MASTER_PROFILE_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_MASTER_PROFILE_NAME",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_NODE_POLICY_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_NODE_ROLE_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_NODE_PROFILE_ARN",
+      "description": "TBD"
+    },
+    {
+      "name": "AWS_NODE_PROFILE_NAME",
+      "description": "TBD"
+    },
+    {
+      "name": "OS_CACERT_FILE",
+      "description": "OpenStack CA Certificate File",
+      "default": "/etc/secrets/openstack-ca-crt"
+    },
+    {
+      "name": "openstack-ca-crt",
+      "description": "OpenStack CA Certificate Contents",
+      "secret": true
+    },
+    {
+      "name": "OS_AUTH_URL",
+      "description": "OpenStack Keystone URL",
+      "default": ""
+    },
+    {
+      "name": "OS_USERNAME",
+      "description": "OpenStack Username",
+      "default": ""
+    },
+    {
+      "name": "OS_PASSWORD_FILE",
+      "description": "OpenStack Password File",
+      "default": "/etc/secrets/os-password"
+    },
+    {
+      "name": "os-password",
+      "description": "OpenStack Password",
+      "secret": true
+    },
+    {
+      "name": "OS_DOMAIN_NAME",
+      "description": "OpenStack Domain Name",
+      "default": ""
+    },
+    {
+      "name": "OS_PROJECT_ID",
+      "description": "OpenStack Project ID",
+      "default": ""
+    },
+    {
+      "name": "OS_PROJECT_NAME",
+      "description": "OpenStack Project Name",
+      "default": ""
+    },
+    {
+      "name": "OS_INSECURE",
+      "description": "OpenStack Insecure Flag",
+      "default": ""
+    },
+    {
+      "name": "OS_ENDPOINT_TYPE",
+      "description": "OpenStack Endpoint Type",
+      "default": ""
+    },
+    {
+      "name": "OS_REGION_NAME",
+      "description": "OpenStack Region Name",
+      "default": ""
+    },
+    {
+      "name": "OS_FLOATING_IP_POOL_NAME",
+      "description": "OpenStack Pool Name",
+      "default": ""
+    },
+    {
+      "name": "OS_FLOATING_IP_POOL_ID",
+      "description": "OpenStack Pool ID",
+      "default": ""
+    },
+    {
+      "name": "OS_NETWORK_ID",
+      "description": "OpenStack Network ID",
+      "default": ""
+    },
+    {
+      "name": "OS_SUBNET_ID",
+      "description": "OpenStack Subnet ID",
+      "default": ""
+    },
+    {
+      "name": "OS_AVAILABILITY_ZONES",
+      "description": "OpenStack Availability Zone",
+      "default": ""
+    },
+    {
+      "name": "OS_COMPUTE_AZS_AND_STORAGE_AZS",
+      "description": "OpenStack Storage and Compute Availability Zone Mapping",
+      "default": ""
+    },
+    {
+      "name": "OS_MASTER_FLAVOR_ID",
+      "description": "OpenStack master Flavor ID",
+      "default": ""
+    },
+    {
+      "name": "OS_NODE_FLAVOR_ID",
+      "description": "OpenStack node Flavor ID",
+      "default": ""
+    },
+    {
+      "name": "OS_GLUSTERFS_FLAVOR_ID",
+      "description": "OpenStack GlusterFS Flavor ID",
+      "default": ""
+    },
+    {
+      "name": "OS_WINDOWS2012R2_FLAVOR_ID",
+      "description": "OpenStack Windows 2012R2 Flavor ID",
+      "default": ""
+    },
+    {
+      "name": "OS_LINUX_IMAGE_ID",
+      "description": "OpenStack Linux Image ID for Ubuntu 14.04.3",
+      "default": ""
+    },
+    {
+      "name": "OS_WINDOWS2012R2_IMAGE_ID",
+      "description": "OpenStack Microsoft Windows Server 2012R2 Image ID",
+      "default": ""
+    },
+    {
+      "name": "OS_KEYPAIR_FILE",
+      "description": "OpenStack Keypair Filename",
+      "default": "/etc/secrets/os-keypair"
+    },
+    {
+      "name": "OS_KEYPAIR",
+      "description": "OpenStack Keypair Name",
+      "default": ""
+    },
+    {
+      "name": "OS_JUMPBOX_CIDR",
+      "description": "OpenStack Jumpbox CIDR",
+      "default": ""
+    },
+    {
+      "name": "OS_LOADBALANCER_CIDR",
+      "description": "OpenStack LoadBalancer CIDR",
+      "default": ""
+    },
+    {
+      "name": "aws-secret-key",
+      "description": "The AWS secret key contents",
+      "secret": true
+    },
+    {
+      "name": "keypair",
+      "description": "The AWS keypair contents",
+      "secret": true
+    },
+    {
+      "name": "os-keypair",
+      "description": "The OpenStack keypair contents",
+      "secret": true
+    },
+    {
+      "name": "vs-keypair",
+      "description": "VSphere keypair contents",
+      "secret": true
+    },
+    {
+      "name": "VS_USERNAME",
+      "description": "VSphere Username",
+      "default": ""
+    },
+    {
+      "name": "VS_PASSWORD_FILE",
+      "description": "VSphere Password File",
+      "default": "/etc/secrets/vs-password"
+    },
+    {
+      "name": "vs-password",
+      "description": "VSphere password",
+      "secret": true
+    },
+    {
+      "name": "VS_SERVER",
+      "description": "VSphere Server",
+      "default": ""
+    },
+    {
+      "name": "VS_INSECURE",
+      "description": "VSphere Insecure Flag",
+      "default": ""
+    },
+    {
+      "name": "VS_NETWORK_NAME",
+      "description": "VSphere Network Name",
+      "default": ""
+    },
+    {
+      "name": "VS_LB_VIP_ALLOCATION_START",
+      "description": "VSphere Loadbalancer VIP start address",
+      "default": ""
+    },
+    {
+      "name": "VS_LB_VIP_ALLOCATION_END",
+      "description": "VSphere Loadbalancer VIP end address",
+      "default": ""
+    },
+    {
+      "name": "VS_LB_VIRTUAL_ROUTER_ID",
+      "description": "VSphere Loadbalancer virtual router ID",
+      "default": ""
+    },
+    {
+      "name": "VS_CIDATA_ISO",
+      "description": "VSPhere CI Data",
+      "default": ""
+    },
+    {
+      "name": "VS_DATASTORE",
+      "description": "VSphere Datastore",
+      "default": ""
+    },
+    {
+      "name": "VS_DATACENTER",
+      "description": "VSphere Datacenter",
+      "default": ""
+    },
+    {
+      "name": "VS_CLUSTERS",
+      "description": "VSphere Cluster",
+      "default": ""
+    },
+    {
+      "name": "VS_FOLDER",
+      "description": "VSphere folder",
+      "default": ""
+    },
+    {
+      "name": "VS_KEYPAIR_FILE",
+      "description": "VSphere Keypair Filename",
+      "default": "/etc/secrets/vs-keypair"
+    },
+    {
+      "name": "VS_LINUX_VMDK_SOURCE",
+      "description": "VSphere VMDK source to use for Ubuntu 14.04.3",
+      "default": ""
+    },
+    {
+      "name": "VS_WINDOWS2012R2_VMDK_SOURCE",
+      "description": "VSphere VMDK source to use for Microsoft Windows Server 2012R2",
+      "default": ""
+    },
+    {
+      "name": "VS_MASTER_NUM_VCPUS",
+      "description": "Number of Virtual CPUs to use for Master",
+      "default": "2"
+    },
+    {
+      "name": "VS_NODE_NUM_VCPUS",
+      "description": "Number of Virtual CPUs to use for Node",
+      "default": "2"
+    },
+    {
+      "name": "VS_GLUSTERFS_NUM_VCPUS",
+      "description": "Number of Virtual CPUs to use for Gluster Filesystem",
+      "default": "2"
+    },
+    {
+      "name": "VS_WINDOWS2012R2_NUM_VCPUS",
+      "description": "Number of Virtual CPUs to use for Windows Server",
+      "default": "2"
+    },
+    {
+      "name": "VS_MASTER_MEM_MB",
+      "description": "Memory in MB to use for Master",
+      "default": "4096"
+    },
+    {
+      "name": "VS_NODE_MEM_MB",
+      "description": "Memory in MB to use for Node",
+      "default": "8192"
+    },
+    {
+      "name": "VS_GLUSTERFS_MEM_MB",
+      "description": "Memory in MB to use for Gluster FS",
+      "default": "4096"
+    },
+    {
+      "name": "VS_WINDOWS2012R2_MEM_MB",
+      "description": "Memory in MB to use for Windows Server",
+      "default": "8192"
+    },
+    {
+      "name": "VS_NODE_IP",
+      "description": "XXX VSphere Node IP",
+      "required": true
+    },
+    {
+      "name": "VS_DISK_TYPE",
+      "description": "XXX VSphere Disk Type",
+      "default": "eager_zeroed"
+    },
+    {
+      "name": "DB_USER",
+      "description": "PostgreSQL user",
+      "default": "postgres"
+    },
+    {
+      "name": "DB_HOST",
+      "description": "Database host address",
+      "default": "pgpool2-int"
+    },
+    {
+      "name": "DB_PORT",
+      "description": "PostgreSQL port",
+      "default": "9999"
+    },
+    {
+      "name": "PGDATA",
+      "description": "Postgres data directory location. This must be the same as the pgsql volume mount point.",
+      "default": "/data/pgsql"
+    },
+    {
+      "name": "PGPORT",
+      "description": "Port that the Postgres server listens on. This must match the service port definition.",
+      "default": "5432"
+    },
+    {
+      "name": "POSTGRES_USER",
+      "description": "Postgres super user",
+      "default": "postgres"
+    },
+    {
+      "name": "POSTGRES_PASSWORD_FILE",
+      "description": "Postgres super user's password file",
+      "default": "/etc/secrets/pgsql"
+    },
+    {
+      "name": "POSTGRES_SSL_ENABLED",
+      "description": "Set to true to enable SSL mode in both pgpool2 and pgsql",
+      "default": "true"
+    },
+    {
+      "name": "POSTGRES_SSL_CERTIFICATE",
+      "description": "Password file containing the super user's password. This is a server-side parameter.",
+      "default": "/etc/secrets/pg-ssl-cert"
+    },
+    {
+      "name": "POSTGRES_SSL_KEY_FILE",
+      "description": "Password file containing the super user's password. This is a server-side parameter.",
+      "default": "/etc/secrets/pg-ssl-key"
+    },
+    {
+      "name": "POSTGRES_INITDB_ARGS",
+      "description": "Optional arguments to Postgres initdb operation. This is a server-side parameter.",
+      "default": ""
+    },
+    {
+      "name": "NATS_HOST",
+      "description": "NATS host address",
+      "default": "nats-int:4222"
+    },
+    {
+      "name": "NATS_PORT",
+      "description": "Port number for NATS",
+      "default": "4222"
+    },
+    {
+      "name": "NATS_USERNAME",
+      "description": "NATS username",
+      "default": "hcp"
+    },
+    {
+      "name": "NATS_PASSWORD_FILE",
+      "description": "Secret file location to use in NATS",
+      "default": "/etc/secrets/nats"
+    },
+    {
+      "name": "NATS_USE_TLS",
+      "description": "If NATS should use TLS",
+      "default": "true"
+    },
+    {
+      "name": "NATS_NUM_NODES",
+      "description": "Number of Nats Nodes in the deployment",
+      "default": "3"
+    },
+    {
+      "name": "NATS_SERVER_FLAGS",
+      "description": "Flags to pass in to the gnatsd server",
+      "default": ""
+    },
+    {
+      "name": "nats-tls-cert",
+      "description": "TLS cert",
+      "secret": true
+    },
+    {
+      "name": "nats-tls-key",
+      "description": "Private key for TLS cert",
+      "secret": true
+    },
+    {
+      "name": "FLIGHTRECORDER_EXPIRE_HOUR",
+      "description": "Time in hours after which task logs should be expired and not be available anymore",
+      "default": "24"
+    },
+    {
+      "name": "UAA_CONFIG_PATH",
+      "description": "Config path for uaa",
+      "default": "/uaa-postgresql"
+    },
+    {
+      "name": "UAA_CONFIG_FILE",
+      "description": "Config file for uaa",
+      "default": "/uaa-postgresql/uaa.yml"
+    },
+    {
+      "name": "DB_ADDR",
+      "description": "Database address",
+      "default": "pgpool2-int"
+    },
+    {
+      "name": "DB_ENV_DB",
+      "description": "Database for UAA",
+      "default": "uaa"
+    },
+    {
+      "name": "DB_ENV_USER",
+      "description": "Database user",
+      "default": "uaa"
+    },
+    {
+      "name": "UAA_ADMIN_CLIENT_SECRET_FILE",
+      "description": "Client Secret for initial UAA Admin Client",
+      "default": "/etc/secrets/uaa-client-secret"
+    },
+    {
+      "name": "UAA_USER",
+      "description": "UAA db user as used in configuration post-flight job",
+      "default": "uaa"
+    },
+    {
+      "name": "UAA_PW_FILE",
+      "description": "UAA db user's password file as used in configuration post-flight job ",
+      "default": "/etc/secrets/uaa"
+    },
+    {
+      "name": "FLIGHTRECORDER_HOST",
+      "description": "Hostname to advertise for flightrecorder",
+      "default": "flightrecorder-int.hcp.svc"
+    },
+    {
+      "name": "FLIGHTRECORDER_PORT",
+      "description": "Port number to advertise for flightrecorder",
+      "default": "514"
+    },
+    {
+      "name": "RPMGR_NUM_WORKERS",
+      "description": "Number of rpmgr workers",
+      "default": "5"
+    },
+    {
+      "name": "RPMGR_DB_TYPE",
+      "description": "Database type to use in rpmgr",
+      "default": "postgresql"
+    },
+    {
+      "name": "RPMGR_PGSQL_USER",
+      "description": "Database username to use in rpmgr",
+      "default": "rpmgr"
+    },
+    {
+      "name": "RPMGR_PGSQL_PASSWORD_FILE",
+      "description": "Database secret file location to use in rpmgr",
+      "default": "/etc/secrets/rpmgr"
+    },
+    {
+      "name": "RPMGR_PGSQL_HOST",
+      "description": "Database hostname to use in rpmgr",
+      "default": "pgpool2-int"
+    },
+    {
+      "name": "RPMGR_PGSQL_PORT",
+      "description": "Database port to use in rpmgr",
+      "default": "9999"
+    },
+    {
+      "name": "RPMGR_PGSQL_DATABASE",
+      "description": "Database to use in rpmgr",
+      "default": "rpmgr"
+    },
+    {
+      "name": "RPMGR_PGSQL_SSL_MODE",
+      "description": "Database SSL mode to use in rpmgr",
+      "default": "verify-full"
+    },
+    {
+      "name": "RPMGR_PGSQL_ROOT_CERTIFICATE_FILE",
+      "description": "Database SSL root certificate to use in rpmgr",
+      "default": "/etc/secrets/ca-cert"
+    },
+    {
+      "name": "RPMGR_PGSQL_CONNECTION_TIMEOUT",
+      "description": "Database connection timeout to use in rpmgr",
+      "default": "10"
+    },
+    {
+      "name": "RPMGR_PGSQL_BINARY_PARAMETERS",
+      "description": "Database - send byte[] parameters as binary data in rpmgr",
+      "default": "yes"
+    },
+    {
+      "name": "RPMGR_TLS_KEY",
+      "description": "SSL private key file to use in rpmgr for TLS API access",
+      "default": "/etc/secrets/rpmgr-https-key"
+    },
+    {
+      "name": "RPMGR_TLS_CERTIFICATE",
+      "description": "SSL certificate file to use in rpmgr for TLS API access",
+      "default": "/etc/secrets/rpmgr-https-cert"
+    },
+    {
+      "name": "RPMGR_FLANNEL_MODE",
+      "description": "Configure Flannel's forwarding backend",
+      "default": "host-gw"
+    },
+    {
+      "name": "IPMGR_NUM_WORKERS",
+      "description": "Number of ipmgr workers",
+      "default": "5"
+    },
+    {
+      "name": "IPMGR_DB_TYPE",
+      "description": "Database type to use in ipmgr",
+      "default": "postgresql"
+    },
+    {
+      "name": "IPMGR_PGSQL_USER",
+      "description": "Database username to use in ipmgr",
+      "default": "ipmgr"
+    },
+    {
+      "name": "IPMGR_PGSQL_PASSWORD_FILE",
+      "description": "Database secret file location to use in ipmgr",
+      "default": "/etc/secrets/ipmgr"
+    },
+    {
+      "name": "IPMGR_PGSQL_HOST",
+      "description": "Database hostname to use in ipmgr",
+      "default": "pgpool2-int"
+    },
+    {
+      "name": "IPMGR_PGSQL_PORT",
+      "description": "Database port to use in ipmgr",
+      "default": "9999"
+    },
+    {
+      "name": "IPMGR_PGSQL_DATABASE",
+      "description": "Database to use in ipmgr",
+      "default": "ipmgr"
+    },
+    {
+      "name": "IPMGR_PGSQL_SSL_MODE",
+      "description": "Database SSL mode to use in ipmgr",
+      "default": "verify-full"
+    },
+    {
+      "name": "IPMGR_PGSQL_ROOT_CERTIFICATE_FILE",
+      "description": "Database SSL root certificate to use in ipmgr",
+      "default": "/etc/secrets/ca-cert"
+    },
+    {
+      "name": "IPMGR_PGSQL_CONNECTION_TIMEOUT",
+      "description": "Database connection timeout to use in ipmgr",
+      "default": "10"
+    },
+    {
+      "name": "IPMGR_PGSQL_BINARY_PARAMETERS",
+      "description": "Database - send byte[] parameters as binary data in ipmgr",
+      "default": "yes"
+    },
+    {
+      "name": "IPMGR_TLS_PRIVATE_KEY",
+      "description": "SSL private key file to use in ipmgr for TLS API access",
+      "default": "/etc/secrets/ipmgr-https-key"
+    },
+    {
+      "name": "IPMGR_TLS_CERTIFICATE",
+      "description": "SSL certificate file to use in ipmgr for TLS API access",
+      "default": "/etc/secrets/ipmgr-https-cert"
+    },
+    {
+      "name": "DOMAIN_SUFFIX",
+      "description": "Kubernetes DNS domain suffix",
+      "default": "cluster.hcp"
+    },
+    {
+      "name": "DOCKER_VOLUME_SIZE",
+      "description": "Default Docker Volume size for new VMs (in GB)",
+      "default": "80"
+    },
+    {
+      "name": "ROOT_VOLUME_SIZE",
+      "description": "Default Root Volume size for new VMs (in GB)",
+      "default": "80"
+    },
+    {
+      "name": "SHARED_VOLUME_SIZE",
+      "description": "Size of the volume on which shared filesystems will be provisioned (in GB)",
+      "default": "80"
+    },
+    {
+      "name": "RPMGR_KEEP_TERRAFORM",
+      "description": "Keep Terraform files around after completion (for debugging purposes)",
+      "default": "false"
+    },
+    {
+      "name": "SERVICE_ACCOUNT_PK_FILE",
+      "description": "Filename of the file containing the rivate key to sign/verify the kubernetes api service account token with",
+      "default": "/etc/secrets/service-account-pk"
+    },
+    {
+      "name": "rpmgr",
+      "description": "PostgreSQL password for rpmgr",
+      "secret": true
+    },
+    {
+      "name": "rpmgr-https-key",
+      "description": "HTTPS key file for rpmgr",
+      "secret": true
+    },
+    {
+      "name": "rpmgr-https-cert",
+      "description": "HTTPS cert file for rpmgr",
+      "secret": true
+    },
+    {
+      "name": "ipmgr",
+      "description": "PostgreSQL password for ipmgr",
+      "secret": true
+    },
+    {
+      "name": "ipmgr-https-key",
+      "description": "HTTPS key file for ipmgr",
+      "secret": true
+    },
+    {
+      "name": "ipmgr-https-cert",
+      "description": "HTTPS cert file for ipmgr",
+      "secret": true
+    },
+    {
+      "name": "uaa",
+      "description": "PostgreSQL password for UAA",
+      "secret": true
+    },
+    {
+      "name": "nats",
+      "description": "Password for NATS",
+      "secret": true
+    },
+    {
+      "name": "uaa-client-secret",
+      "description": "Client secret for UAA admin client",
+      "secret": true
+    },
+    {
+      "name": "uaa-token-signing-key",
+      "description": "Private key for UAA signing token",
+      "secret": true
+    },
+    {
+      "name": "uaa-token-verification-key",
+      "description": "Public key for UAA signing token",
+      "secret": true
+    },
+    {
+      "name": "uaa-tls-cert",
+      "description": "TLS cert",
+      "secret": true
+    },
+    {
+      "name": "uaa-tls-key",
+      "description": "Private key for TLS cert",
+      "secret": true
+    },
+    {
+      "name": "uaa-keystore-password",
+      "description": "UAA keystore password",
+      "secret": true
+    },
+    {
+      "name": "service-account-pk",
+      "description": "Kubernetes API Service Account Pibate Key to sign/validate tokens with",
+      "secret": true
+    },
+    {
+      "name": "TOKEN_VERIFICATION_KEY_FILE",
+      "description": "Location of file containing verification key for UAA tokens",
+      "default": "/etc/secrets/uaa-token-verification-key"
+    },
+    {
+      "name": "IPMGR_CATALOG_LOCATION",
+      "description": "Location of service/instance catalog in S3",
+      "default": "stackato;helion-service-manager/release/catalog-templates/HCP-v1/alpha-1:us-west-2;s3"
+    },
+    {
+      "name": "AWS_WINDOWS_PASSWORD_FILE",
+      "description": "The AWS Windows password file on disk",
+      "default": "/etc/secrets/windows"
+    },
+    {
+      "name": "OS_WINDOWS_PASSWORD_FILE",
+      "description": "The OpenStack Windows password file on disk",
+      "default": "/etc/secrets/windows"
+    },
+    {
+      "name": "windows",
+      "description": "Windows host password",
+      "secret": true
+    },
+    {
+      "name": "REPOSITORY_PATH",
+      "description": "Path to the docker registry to use as the default image repository",
+      "default": ""
+    },
+    {
+      "name": "ca-cert",
+      "description": "HCP CA certificate",
+      "secret": true
+    },
+    {
+      "name": "CA_CERT_FILE",
+      "description": "File containing the CA certificate",
+      "default": "/etc/secrets/ca-cert"
+    },
+    {
+      "name": "ca-key",
+      "description": "HCP CA private key",
+      "secret": true
+    },
+    {
+      "name": "CA_KEY_FILE",
+      "description": "File containing the CA certificate key",
+      "default": "/etc/secrets/ca-key"
+    },
+    {
+      "name": "pgsql",
+      "description": "PostgreSQL super user's password",
+      "secret": true
+    },
+    {
+      "name": "pg-ssl-cert",
+      "description": "Postgres SSL certificate",
+      "secret": true
+    },
+    {
+      "name": "pg-ssl-key",
+      "description": "Postgres SSL private key",
+      "secret": true
+    },
+    {
+      "name": "HCP_DOMAIN_NAME",
+      "description": "Domain Name to use for the HCP install",
+      "default": ""
+    },
+    {
+      "name": "HCP_LOADBALANCER_TIMEOUT_MIN",
+      "description": "Load balancer timeout in minutes",
+      "default": "10"
+    },
+    {
+      "name": "HCP_VOLUME_TIMEOUT_MIN",
+      "description": "Volume timeout in minutes",
+      "default": "10"
+    },
+    {
+      "name": "RPMGR_WAIT_TIME_BEFORE_DIE_MIN",
+      "description": "Time to wait before killing self, in minutes",
+      "default": "20"
+    },
+    {
+      "name": "IPMGR_ENFORCE_QUOTA",
+      "description": "Enforce RAM and VCPU quota",
+      "default": "true"
+    },
+    {
+      "name": "PGPOOL2_PORT",
+      "description": "pgpool2 listening port. All pgsql clients should connect to this port",
+      "default": "9999"
+    },
+    {
+      "name": "PGPOOL2_AUTH_TIMEOUT",
+      "description": "pgpool2 client authentication timeout in seconds. Increase this value if pgpool2 timed out before pgsql is ready during bootstrap",
+      "default": "600"
+    },
+    {
+      "name": "PGPOOL2_SEARCH_PRIMARY_TIMEOUT",
+      "description": "The amount of time (in seconds) pgpool2 will spend searching for a primary pgsql instance before timing out. Increase this value if pgpool2 timed out before pgsql is ready during bootstrap",
+      "default": "3600"
+    },
+    {
+      "name": "PGPOOL2_PASSWORD_FILE",
+      "description": "The filename of the password file used for authenticating against pgsql2. pgpool2 assumes it is under /etc/pgpool2. Must be the same password as that set in pgsql",
+      "default": "pool_passwd"
+    },
+    {
+      "name": "PGPOOL2_ADMIN_ID",
+      "description": "pgpool2 admin ID. Nothing to do with pgsql. Refer containers/pgpool2/pcp.conf",
+      "default": "pgpool2"
+    },
+    {
+      "name": "PGPOOL2_ADMIN_PASSWORD_FILE",
+      "description": "pgpool2 admin password file. Nothing to do with pgsql. Refer containers/pgpool2/pcp.conf",
+      "default": "/etc/secrets/pgpool2"
+    },
+    {
+      "name": "pgpool2",
+      "description": "pgpool2 admin secret",
+      "secret": true
+    },
+    {
+      "name": "PGPOOL2_SSL_KEY_FILE",
+      "description": "pgpool2 SSL private key file",
+      "default": "/etc/secrets/pgpool2-ssl-key"
+    },
+    {
+      "name": "pgpool2-ssl-key",
+      "description": "pgpool2 SSL private key",
+      "secret": true
+    },
+    {
+      "name": "PGPOOL2_SSL_CERT_FILE",
+      "description": "pgpool2 SSL cert file",
+      "default": "/etc/secrets/pgpool2-ssl-cert"
+    },
+    {
+      "name": "pgpool2-ssl-cert",
+      "description": "pgpool2 SSL certificate",
+      "secret": true
+    },
+    {
+      "name": "POSTGRES_NUM_NODES",
+      "description": "Number of PostgreSQL Nodes in the deployment",
+      "default": "3"
+    },
+    {
+      "name": "HEAPSTER_KUBELET_HTTPS",
+      "description": "Flag to indicate whether to connect to kubelet using https",
+      "default": "true"
+    },
+    {
+      "name": "HEAPSTER_KUBELET_PORT",
+      "description": "Kubelet port",
+      "default": "10250"
+    },
+    {
+      "name": "HEAPSTER_SINK",
+      "description": "Heapster sink",
+      "default": "log"
+    },
+    {
+      "name": "HEAPSTER_HOST",
+      "description": "Heapster host address",
+      "default": "heapster-int.hcp.svc"
+    },
+    {
+      "name": "HEAPSTER_PORT",
+      "description": "Heapster port",
+      "default": "443"
+    },
+    {
+      "name": "heapster-ssl-cert",
+      "description": "Heapster SSL certificate",
+      "secret": true
+    },
+    {
+      "name": "heapster-ssl-key",
+      "description": "Heapster SSL private key",
+      "secret": true
+    },
+    {
+      "name": "CERTIFICATE_KEY_SIZE",
+      "description": "Default key size to use for certificate generation",
+      "default": "4096"
+    },
+    {
+      "name": "HCP_DOCKER_REGISTRY_OVERRIDE",
+      "description": "Allows for setting a default docker repository for images.",
+      "default": ""
+    },
+    {
+      "name": "SYNC_INTERVAL",
+      "description": "Sync Interval for catalog repositories",
+      "default": "300",
+      "example": "300",
+      "data_type": "int32",
+      "required": true,
+      "secret": false
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Log level for HSM service",
+      "default": "debug",
+      "example": "debug",
+      "data_type": "string",
+      "required": true,
+      "secret": false
+    },
+    {
+      "name": "HCP_TIMEOUT",
+      "description": "Timeout for HCP requests",
+      "default": "30",
+      "example": "30",
+      "data_type": "int32",
+      "required": true,
+      "secret": false
+    },
+    {
+      "name": "HCP_ENDPOINT",
+      "description": "URL for the HCP Endpoint",
+      "example": "https://ipmgr.hcp.svc:443/v1",
+      "default": "https://ipmgr.hcp.svc:443/v1",
+      "data_type": "string",
+      "required": true,
+      "secret": false
+    },
+    {
+      "name": "CATALOG_LIST",
+      "description": "CatalogList declared to hold the catalogs list",
+      "default": "stackato;helion-service-manager/release/catalog-templates/HCP-v1/stable-1:us-west-2;s3",
+      "example": "stackato;helion-service-manager/release/catalog-templates/HCP-v1/stable-1:us-west-2;s3",
+      "data_type": "string",
+      "required": true,
+      "secret": false
+    },
+    {
+      "name": "DNS",
+      "description": "DNS registered SAN to be used for HSM",
+      "example": "api.hsm",
+      "default": "api.hsm",
+      "required": false,
+      "secret": false
+    },
+    {
+      "name": "tls-private-key-file",
+      "description": "Private key string for TLS with endlines preserved with '\n'",
+      "example": "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+      "required": true,
+      "secret": true
+    },
+    {
+      "name": "tls-cert-file",
+      "description": "Public key string for TLS with endlines preserved with '\n'",
+      "example": "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----",
+      "required": true,
+      "secret": true
+    },
+    {
+      "name": "generator-ca-private-key",
+      "description": "Private key string for parameter generation ca certificate",
+      "example": "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+      "required": true,
+      "secret": true
+    },
+    {
+      "name": "generator-ca-cert",
+      "description": "CA cert for parameter generation",
+      "example": "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----",
+      "required": true,
+      "secret": true
+    },
+    {
+      "name": "DEV_MODE",
+      "description": "Disable/Enable Developer Mode",
+      "example": "false",
+      "required": true,
+      "default": "false"
+    },
+    {
+      "name": "APP_VERSION_TAG",
+      "description": "Internal flag - Allows overriden Docker image tags for HCP installation",
+      "required": false
+    },
+    {
+      "name": "RELEASE_CHANNEL",
+      "description": "Release channel for catalog and artifacts (can be 'stable' or 'development')",
+      "required": true,
+      "default": "development"
+    },
+    {
+      "name": "HCP_REGISTRY_LOCATION",
+      "description": "The registry containing the HCP images",
+      "required": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "pgsql-data",
+      "size_gb": 10,
+      "filesystem": "ext4",
+      "shared": false
+    },
+    {
+      "name": "pgpool-data",
+      "size_gb": 1,
+      "filesystem": "ext4",
+      "shared": false
+    }
+  ],
+  "components": [
+    {
+      "name": "ipmgr",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-ipmgr",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 128,
+      "max_RAM_mb": 512,
+      "min_VCPU": 0.1,
+      "max_VCPU": 0.5,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "RELEASE_CHANNEL"
+        },
+        {
+          "name": "DEBUG_NET"
+        },
+        {
+          "name": "HCP_DOCKER_REGISTRY_OVERRIDE"
+        },
+        {
+          "name": "CLUSTER_ID"
+        },
+        {
+          "name": "KUBERNETES_VERSION"
+        },
+        {
+          "name": "NTP_SERVERS"
+        },
+        {
+          "name": "IPMGR_NUM_WORKERS"
+        },
+        {
+          "name": "IPMGR_DB_TYPE"
+        },
+        {
+          "name": "IPMGR_PGSQL_USER"
+        },
+        {
+          "name": "IPMGR_PGSQL_PASSWORD_FILE"
+        },
+        {
+          "name": "IPMGR_PGSQL_HOST"
+        },
+        {
+          "name": "IPMGR_PGSQL_PORT"
+        },
+        {
+          "name": "IPMGR_PGSQL_DATABASE"
+        },
+        {
+          "name": "IPMGR_PGSQL_SSL_MODE"
+        },
+        {
+          "name": "IPMGR_PGSQL_ROOT_CERTIFICATE_FILE"
+        },
+        {
+          "name": "IPMGR_PGSQL_CONNECTION_TIMEOUT"
+        },
+        {
+          "name": "IPMGR_PGSQL_BINARY_PARAMETERS"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "IPMGR_TLS_CERTIFICATE"
+        },
+        {
+          "name": "IPMGR_TLS_PRIVATE_KEY"
+        },
+        {
+          "name": "NATS_HOST"
+        },
+        {
+          "name": "NATS_USERNAME"
+        },
+        {
+          "name": "NATS_PASSWORD_FILE"
+        },
+        {
+          "name": "NATS_USE_TLS"
+        },
+        {
+          "name": "nats"
+        },
+        {
+          "name": "NATS_PORT"
+        },
+        {
+          "name": "HEAPSTER_HOST"
+        },
+        {
+          "name": "HEAPSTER_PORT"
+        },
+        {
+          "name": "LOG_LEVEL"
+        },
+        {
+          "name": "ipmgr"
+        },
+        {
+          "name": "ipmgr-https-key"
+        },
+        {
+          "name": "ipmgr-https-cert"
+        },
+        {
+          "name": "IPMGR_PROVIDER"
+        },
+        {
+          "name": "FLIGHTRECORDER_HOST"
+        },
+        {
+          "name": "FLIGHTRECORDER_PORT"
+        },
+        {
+          "name": "DOMAIN_SUFFIX"
+        },
+        {
+          "name": "AWS_REGION"
+        },
+        {
+          "name": "AWS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "AWS_MASTER_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_NODE_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_GLUSTERFS_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_LINUX_AMI"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_AMI"
+        },
+        {
+          "name": "AWS_VPC_ID"
+        },
+        {
+          "name": "AWS_KEYPAIR"
+        },
+        {
+          "name": "AWS_KEYPAIR_FILE"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "name": "AWS_SECRET_KEY_FILE"
+        },
+        {
+          "name": "AWS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "AWS_PUBLIC_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_PRIVATE_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_MASTER_POLICY_ARN"
+        },
+        {
+          "name": "AWS_MASTER_ROLE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_NAME"
+        },
+        {
+          "name": "AWS_NODE_POLICY_ARN"
+        },
+        {
+          "name": "AWS_NODE_ROLE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_NAME"
+        },
+        {
+          "name": "AWS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "aws-secret-key"
+        },
+        {
+          "name": "keypair"
+        },
+        {
+          "name": "OS_CACERT_FILE"
+        },
+        {
+          "name": "openstack-ca-crt"
+        },
+        {
+          "name": "OS_AUTH_URL"
+        },
+        {
+          "name": "OS_USERNAME"
+        },
+        {
+          "name": "OS_PASSWORD_FILE"
+        },
+        {
+          "name": "os-password"
+        },
+        {
+          "name": "OS_DOMAIN_NAME"
+        },
+        {
+          "name": "OS_PROJECT_ID"
+        },
+        {
+          "name": "OS_PROJECT_NAME"
+        },
+        {
+          "name": "OS_INSECURE"
+        },
+        {
+          "name": "OS_ENDPOINT_TYPE"
+        },
+        {
+          "name": "OS_REGION_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_ID"
+        },
+        {
+          "name": "OS_NETWORK_ID"
+        },
+        {
+          "name": "OS_SUBNET_ID"
+        },
+        {
+          "name": "OS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "OS_MASTER_FLAVOR_ID"
+        },
+        {
+          "name": "OS_NODE_FLAVOR_ID"
+        },
+        {
+          "name": "OS_GLUSTERFS_FLAVOR_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_FLAVOR_ID"
+        },
+        {
+          "name": "OS_LINUX_IMAGE_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_IMAGE_ID"
+        },
+        {
+          "name": "OS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "OS_KEYPAIR_FILE"
+        },
+        {
+          "name": "OS_KEYPAIR"
+        },
+        {
+          "name": "OS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "OS_LOADBALANCER_CIDR"
+        },
+        {
+          "name": "os-keypair"
+        },
+        {
+          "name": "vs-keypair"
+        },
+        {
+          "name": "VS_USERNAME"
+        },
+        {
+          "name": "VS_PASSWORD_FILE"
+        },
+        {
+          "name": "vs-password"
+        },
+        {
+          "name": "VS_SERVER"
+        },
+        {
+          "name": "VS_INSECURE"
+        },
+        {
+          "name": "VS_NETWORK_NAME"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_START"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_END"
+        },
+        {
+          "name": "VS_LB_VIRTUAL_ROUTER_ID"
+        },
+        {
+          "name": "VS_CIDATA_ISO"
+        },
+        {
+          "name": "VS_DATASTORE"
+        },
+        {
+          "name": "VS_DATACENTER"
+        },
+        {
+          "name": "VS_CLUSTERS"
+        },
+        {
+          "name": "VS_FOLDER"
+        },
+        {
+          "name": "VS_KEYPAIR_FILE"
+        },
+        {
+          "name": "VS_LINUX_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_MASTER_NUM_VCPUS"
+        },
+        {
+          "name": "VS_NODE_NUM_VCPUS"
+        },
+        {
+          "name": "VS_GLUSTERFS_NUM_VCPUS"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_NUM_VCPUS"
+        },
+        {
+          "name": "VS_MASTER_MEM_MB"
+        },
+        {
+          "name": "VS_NODE_MEM_MB"
+        },
+        {
+          "name": "VS_GLUSTERFS_MEM_MB"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_MEM_MB"
+        },
+        {
+          "name": "VS_NODE_IP"
+        },
+        {
+          "name": "VS_DISK_TYPE"
+        },
+        {
+          "name": "UAA_ADMIN_CLIENT_SECRET_FILE"
+        },
+        {
+          "name": "uaa-client-secret"
+        },
+        {
+          "name": "uaa-token-verification-key"
+        },
+        {
+          "name": "uaa-tls-cert"
+        },
+        {
+          "name": "uaa-tls-key"
+        },
+        {
+          "name": "uaa-keystore-password"
+        },
+        {
+          "name": "TOKEN_VERIFICATION_KEY_FILE"
+        },
+        {
+          "name": "IPMGR_CATALOG_LOCATION"
+        },
+        {
+          "name": "REPOSITORY_PATH"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "ca-cert"
+        },
+        {
+          "name": "HCP_DOMAIN_NAME"
+        },
+        {
+          "name": "HCP_LOADBALANCER_TIMEOUT_MIN"
+        },
+        {
+          "name": "HCP_VOLUME_TIMEOUT_MIN"
+        },
+        {
+          "name": "IPMGR_ENFORCE_QUOTA"
+        },
+        {
+          "name": "OS_COMPUTE_AZS_AND_STORAGE_AZS"
+        },
+        {
+          "name": "HCP_REGISTRY_LOCATION"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 50,
+      "service_ports": [
+        {
+          "name": "ipmgr-api-https",
+          "protocol": "TCP",
+          "source_port": 443,
+          "target_port": 8443,
+          "public": true
+        }
+      ]
+    },
+    {
+      "name": "rpmgr",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-rpmgr",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 128,
+      "max_RAM_mb": 512,
+      "min_VCPU": 0.1,
+      "max_VCPU": 0.5,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "HCP_DOCKER_REGISTRY_OVERRIDE"
+        },
+        {
+          "name": "RELEASE_CHANNEL"
+        },
+        {
+          "name": "APP_VERSION_TAG"
+        },
+        {
+          "name": "CLUSTER_ID"
+        },
+        {
+          "name": "KUBERNETES_VERSION"
+        },
+        {
+          "name": "NTP_SERVERS"
+        },
+        {
+          "name": "INSECURE_REGISTRY"
+        },
+        {
+          "name": "RPMGR_NUM_WORKERS"
+        },
+        {
+          "name": "RPMGR_DOCKER_VERSION"
+        },
+        {
+          "name": "RPMGR_PROVIDER"
+        },
+        {
+          "name": "LOG_LEVEL"
+        },
+        {
+          "name": "NATS_HOST"
+        },
+        {
+          "name": "NATS_USERNAME"
+        },
+        {
+          "name": "NATS_PASSWORD_FILE"
+        },
+        {
+          "name": "NATS_USE_TLS"
+        },
+        {
+          "name": "nats"
+        },
+        {
+          "name": "NATS_PORT"
+        },
+        {
+          "name": "RPMGR_DB_TYPE"
+        },
+        {
+          "name": "RPMGR_PGSQL_USER"
+        },
+        {
+          "name": "RPMGR_PGSQL_PASSWORD_FILE"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "RPMGR_PGSQL_HOST"
+        },
+        {
+          "name": "RPMGR_PGSQL_PORT"
+        },
+        {
+          "name": "RPMGR_PGSQL_DATABASE"
+        },
+        {
+          "name": "RPMGR_PGSQL_SSL_MODE"
+        },
+        {
+          "name": "RPMGR_PGSQL_ROOT_CERTIFICATE_FILE"
+        },
+        {
+          "name": "RPMGR_TLS_CERTIFICATE"
+        },
+        {
+          "name": "RPMGR_TLS_KEY"
+        },
+        {
+          "name": "RPMGR_PGSQL_CONNECTION_TIMEOUT"
+        },
+        {
+          "name": "RPMGR_PGSQL_BINARY_PARAMETERS"
+        },
+        {
+          "name": "RPMGR_FLANNEL_MODE"
+        },
+        {
+          "name": "AWS_REGION"
+        },
+        {
+          "name": "AWS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "AWS_MASTER_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_NODE_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_GLUSTERFS_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_LINUX_AMI"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_AMI"
+        },
+        {
+          "name": "AWS_VPC_ID"
+        },
+        {
+          "name": "AWS_KEYPAIR"
+        },
+        {
+          "name": "AWS_KEYPAIR_FILE"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "name": "AWS_SECRET_KEY_FILE"
+        },
+        {
+          "name": "AWS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "AWS_PUBLIC_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_PRIVATE_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_MASTER_POLICY_ARN"
+        },
+        {
+          "name": "AWS_MASTER_ROLE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_NAME"
+        },
+        {
+          "name": "AWS_NODE_POLICY_ARN"
+        },
+        {
+          "name": "AWS_NODE_ROLE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_NAME"
+        },
+        {
+          "name": "DOCKER_VOLUME_SIZE"
+        },
+        {
+          "name": "ROOT_VOLUME_SIZE"
+        },
+        {
+          "name": "SHARED_VOLUME_SIZE"
+        },
+        {
+          "name": "aws-secret-key"
+        },
+        {
+          "name": "keypair"
+        },
+        {
+          "name": "rpmgr"
+        },
+        {
+          "name": "rpmgr-https-key"
+        },
+        {
+          "name": "rpmgr-https-cert"
+        },
+        {
+          "name": "OS_CACERT_FILE"
+        },
+        {
+          "name": "openstack-ca-crt"
+        },
+        {
+          "name": "OS_AUTH_URL"
+        },
+        {
+          "name": "OS_USERNAME"
+        },
+        {
+          "name": "OS_PASSWORD_FILE"
+        },
+        {
+          "name": "os-password"
+        },
+        {
+          "name": "OS_DOMAIN_NAME"
+        },
+        {
+          "name": "OS_PROJECT_ID"
+        },
+        {
+          "name": "OS_PROJECT_NAME"
+        },
+        {
+          "name": "OS_INSECURE"
+        },
+        {
+          "name": "OS_ENDPOINT_TYPE"
+        },
+        {
+          "name": "OS_REGION_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_ID"
+        },
+        {
+          "name": "OS_NETWORK_ID"
+        },
+        {
+          "name": "OS_SUBNET_ID"
+        },
+        {
+          "name": "OS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "OS_MASTER_FLAVOR_ID"
+        },
+        {
+          "name": "OS_NODE_FLAVOR_ID"
+        },
+        {
+          "name": "OS_GLUSTERFS_FLAVOR_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_FLAVOR_ID"
+        },
+        {
+          "name": "OS_LINUX_IMAGE_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_IMAGE_ID"
+        },
+        {
+          "name": "OS_KEYPAIR_FILE"
+        },
+        {
+          "name": "OS_KEYPAIR"
+        },
+        {
+          "name": "OS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "OS_LOADBALANCER_CIDR"
+        },
+        {
+          "name": "os-keypair"
+        },
+        {
+          "name": "OS_COMPUTE_AZS_AND_STORAGE_AZS"
+        },
+        {
+          "name": "OS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "vs-keypair"
+        },
+        {
+          "name": "VS_USERNAME"
+        },
+        {
+          "name": "VS_PASSWORD_FILE"
+        },
+        {
+          "name": "vs-password"
+        },
+        {
+          "name": "VS_SERVER"
+        },
+        {
+          "name": "VS_INSECURE"
+        },
+        {
+          "name": "VS_NETWORK_NAME"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_START"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_END"
+        },
+        {
+          "name": "VS_LB_VIRTUAL_ROUTER_ID"
+        },
+        {
+          "name": "VS_CIDATA_ISO"
+        },
+        {
+          "name": "VS_DATASTORE"
+        },
+        {
+          "name": "VS_DATACENTER"
+        },
+        {
+          "name": "VS_CLUSTERS"
+        },
+        {
+          "name": "VS_FOLDER"
+        },
+        {
+          "name": "VS_KEYPAIR_FILE"
+        },
+        {
+          "name": "VS_LINUX_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_MASTER_NUM_VCPUS"
+        },
+        {
+          "name": "VS_NODE_NUM_VCPUS"
+        },
+        {
+          "name": "VS_GLUSTERFS_NUM_VCPUS"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_NUM_VCPUS"
+        },
+        {
+          "name": "VS_MASTER_MEM_MB"
+        },
+        {
+          "name": "VS_NODE_MEM_MB"
+        },
+        {
+          "name": "VS_GLUSTERFS_MEM_MB"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_MEM_MB"
+        },
+        {
+          "name": "VS_DISK_TYPE"
+        },
+        {
+          "name": "RPMGR_KEEP_TERRAFORM"
+        },
+        {
+          "name": "AWS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "ca-cert"
+        },
+        {
+          "name": "CA_KEY_FILE"
+        },
+        {
+          "name": "ca-key"
+        },
+        {
+          "name": "windows"
+        },
+        {
+          "name": "RPMGR_WAIT_TIME_BEFORE_DIE_MIN"
+        },
+        {
+          "name": "CERTIFICATE_KEY_SIZE"
+        },
+        {
+          "name": "service-account-pk"
+        },
+        {
+          "name": "SERVICE_ACCOUNT_PK_FILE"
+        },
+        {
+          "name": "HCP_REGISTRY_LOCATION"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 50,
+      "service_ports": [
+        {
+          "name": "http",
+          "protocol": "TCP",
+          "source_port": 8112,
+          "target_port": 8112,
+          "public": false
+        }
+      ]
+    },
+    {
+      "name": "nats",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-nats",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 128,
+      "max_RAM_mb": 512,
+      "platform": "linux-x86_64",
+      "min_instances": 1,
+      "max_instances": 10,
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "NATS_HOST"
+        },
+        {
+          "name": "NATS_USERNAME"
+        },
+        {
+          "name": "NATS_PASSWORD_FILE"
+        },
+        {
+          "name": "nats"
+        },
+        {
+          "name": "NATS_PORT"
+        },
+        {
+          "name": "NATS_NUM_NODES"
+        },
+        {
+          "name": "NATS_SERVER_FLAGS"
+        },
+        {
+          "name": "nats-tls-cert"
+        },
+        {
+          "name": "nats-tls-key"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "ca-cert"
+        }
+      ],
+      "service_ports": [
+        {
+          "name": "nats",
+          "protocol": "TCP",
+          "source_port": 4222,
+          "target_port": 4222,
+          "public": false
+        },
+        {
+          "name": "nats-route",
+          "protocol": "TCP",
+          "source_port": 6222,
+          "target_port": 6222,
+          "public": false
+        },
+        {
+          "name": "nats-mgmt",
+          "protocol": "TCP",
+          "source_port": 8222,
+          "target_port": 8222,
+          "public": false
+        }
+      ]
+    },
+    {
+      "name": "ident-api",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-uaa",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 1024,
+      "max_RAM_mb": 2048,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "UAA_CONFIG_PATH"
+        },
+        {
+          "name": "UAA_CONFIG_FILE"
+        },
+        {
+          "name": "DB_ADDR"
+        },
+        {
+          "name": "DB_PORT"
+        },
+        {
+          "name": "DB_ENV_DB"
+        },
+        {
+          "name": "DB_ENV_USER"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "HCP_DOMAIN_NAME"
+        },
+        {
+          "name": "ca-cert"
+        },
+        {
+          "name": "uaa"
+        },
+        {
+          "name": "uaa-client-secret"
+        },
+        {
+          "name": "uaa-token-signing-key"
+        },
+        {
+          "name": "uaa-token-verification-key"
+        },
+        {
+          "name": "uaa-tls-cert"
+        },
+        {
+          "name": "uaa-tls-key"
+        },
+        {
+          "name": "uaa-keystore-password"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 50,
+      "service_ports": [
+        {
+          "name": "ident-api-https",
+          "protocol": "TCP",
+          "source_port": 443,
+          "target_port": 8443,
+          "public": true
+        }
+      ]
+    },
+    {
+      "name": "flightrecorder",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-flightrecorder",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 128,
+      "max_RAM_mb": 512,
+      "platform": "linux-x86_64",
+      "min_instances": 1,
+      "max_instances": 50,
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "LOGSTASH_HOST"
+        },
+        {
+          "name": "LOGSTASH_PORT"
+        }
+      ],
+      "service_ports": [
+        {
+          "name": "syslog",
+          "protocol": "TCP",
+          "source_port": 514,
+          "target_port": 10514,
+          "public": false
+        },
+        {
+          "name": "syslog-udp",
+          "protocol": "UDP",
+          "source_port": 514,
+          "target_port": 10514,
+          "public": false
+        }
+      ]
+    },
+    {
+      "name": "pgsql",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-pgsql",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 512,
+      "max_RAM_mb": 1024,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "PGDATA"
+        },
+        {
+          "name": "PGPORT"
+        },
+        {
+          "name": "POSTGRES_USER"
+        },
+        {
+          "name": "POSTGRES_PASSWORD_FILE"
+        },
+        {
+          "name": "POSTGRES_SSL_CERTIFICATE"
+        },
+        {
+          "name": "POSTGRES_SSL_KEY_FILE"
+        },
+        {
+          "name": "POSTGRES_INITDB_ARGS"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "pg-ssl-cert"
+        },
+        {
+          "name": "pg-ssl-key"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 3,
+      "service_ports": [
+        {
+          "name": "pgsql-1",
+          "protocol": "TCP",
+          "source_port": 5432,
+          "target_port": 5432,
+          "public": false
+        }
+      ],
+      "volume_mounts": [
+        {
+          "volume_name": "pgsql-data",
+          "mountpoint": "/data"
+        }
+      ]
+    },
+    {
+      "name": "pgpool2",
+      "external_name": "pgpool2",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-pgpool2",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 512,
+      "min_disk_gb": 1,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "PGPOOL2_PORT"
+        },
+        {
+          "name": "PGPOOL2_AUTH_TIMEOUT"
+        },
+        {
+          "name": "PGPOOL2_SEARCH_PRIMARY_TIMEOUT"
+        },
+        {
+          "name": "PGPOOL2_PASSWORD_FILE"
+        },
+        {
+          "name": "pgpool2"
+        },
+        {
+          "name": "PGPOOL2_ADMIN_ID"
+        },
+        {
+          "name": "PGPOOL2_ADMIN_PASSWORD_FILE"
+        },
+        {
+          "name": "PGPOOL2_SSL_KEY_FILE"
+        },
+        {
+          "name": "pgpool2-ssl-cert"
+        },
+        {
+          "name": "PGPOOL2_SSL_CERT_FILE"
+        },
+        {
+          "name": "pgpool2-ssl-key"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "POSTGRES_USER"
+        },
+        {
+          "name": "POSTGRES_PASSWORD_FILE"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "POSTGRES_NUM_NODES"
+        },
+        {
+          "name": "PGDATA"
+        },
+        {
+          "name": "PGPORT"
+        },
+        {
+          "name": "IPMGR_PGSQL_USER"
+        },
+        {
+          "name": "IPMGR_PGSQL_PASSWORD_FILE"
+        },
+        {
+          "name": "ipmgr"
+        },
+        {
+          "name": "RPMGR_PGSQL_USER"
+        },
+        {
+          "name": "RPMGR_PGSQL_PASSWORD_FILE"
+        },
+        {
+          "name": "rpmgr"
+        },
+        {
+          "name": "UAA_USER"
+        },
+        {
+          "name": "UAA_PW_FILE"
+        },
+        {
+          "name": "uaa"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 1,
+      "service_ports": [
+        {
+          "name": "pgpool2-1",
+          "protocol": "TCP",
+          "source_port": 9999,
+          "target_port": 9999,
+          "public": false
+        }
+      ],
+      "volume_mounts": [
+        {
+          "volume_name": "pgpool-data",
+          "mountpoint": "/var/log/postgresql"
+        }
+      ]
+    },
+    {
+      "name": "heapster",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-heapster",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 512,
+      "min_disk_gb": 1,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "HEAPSTER_SINK"
+        },
+        {
+          "name": "HEAPSTER_KUBELET_PORT"
+        },
+        {
+          "name": "HEAPSTER_KUBELET_HTTPS"
+        },
+        {
+          "name": "heapster-ssl-cert"
+        },
+        {
+          "name": "heapster-ssl-key"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 1,
+      "service_ports": [
+        {
+          "name": "heapster",
+          "protocol": "TCP",
+          "source_port": 443,
+          "target_port": 8082,
+          "public": false
+        }
+      ]
+    },
+    {
+      "name": "hsm-server",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hsm-server",
+      "tag": "1.0.36-0-g757d8db",
+      "min_RAM_mb": 50,
+      "max_RAM_mb": 250,
+      "min_VCPU": 0.1,
+      "max_VCPU": 0.5,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "min_instances": 1,
+      "max_instances": 1,
+      "service_ports": [
+        {
+          "name": "hsm-api",
+          "protocol": "TCP",
+          "source_port": 443,
+          "target_port": 443,
+          "public": true
+        }
+      ],
+      "volume_mounts": [],
+      "parameters": [
+        {
+          "name": "RELEASE_CHANNEL"
+        },
+        {
+          "name": "SYNC_INTERVAL"
+        },
+        {
+          "name": "LOG_LEVEL"
+        },
+        {
+          "name": "HCP_TIMEOUT"
+        },
+        {
+          "name": "HCP_ENDPOINT"
+        },
+        {
+          "name": "CATALOG_LIST"
+        },
+        {
+          "name": "tls-private-key-file"
+        },
+        {
+          "name": "tls-cert-file"
+        },
+        {
+          "name": "DEV_MODE"
+        },
+        {
+          "name": "generator-ca-private-key"
+        },
+        {
+          "name": "generator-ca-cert"
+        },
+        {
+          "name": "DNS"
+        }
+      ]
+    }
+  ],
+  "preflight": [],
+  "postflight": [
+    {
+      "name": "configuration",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-configuration",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 64,
+      "max_RAM_mb": 128,
+      "platform": "linux-x86_64",
+      "parameters": [
+        {
+          "name": "RELEASE_CHANNEL"
+        },
+        {
+          "name": "ipmgr"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "uaa"
+        },
+        {
+          "name": "rpmgr"
+        },
+        {
+          "name": "DB_USER"
+        },
+        {
+          "name": "DB_HOST"
+        },
+        {
+          "name": "DB_PORT"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "ca-cert"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 1,
+      "workload_type": "container",
+      "retry_count": 100
+    },
+    {
+      "name": "upgrader-postflight",
+      "repository": "docker.io",
+      "organization": "stackatodev",
+      "image": "hcp-upgrader-postflight",
+      "tag": "0.9.15-0-g040a44a",
+      "min_RAM_mb": 128,
+      "max_RAM_mb": 512,
+      "platform": "linux-x86_64",
+      "workload_type": "container",
+      "parameters": [
+        {
+          "name": "RELEASE_CHANNEL"
+        },
+        {
+          "name": "CLUSTER_ID"
+        },
+        {
+          "name": "KUBERNETES_VERSION"
+        },
+        {
+          "name": "NTP_SERVERS"
+        },
+        {
+          "name": "IPMGR_DB_TYPE"
+        },
+        {
+          "name": "IPMGR_PGSQL_USER"
+        },
+        {
+          "name": "IPMGR_PGSQL_PASSWORD_FILE"
+        },
+        {
+          "name": "IPMGR_PGSQL_HOST"
+        },
+        {
+          "name": "IPMGR_PGSQL_PORT"
+        },
+        {
+          "name": "IPMGR_PGSQL_DATABASE"
+        },
+        {
+          "name": "IPMGR_PGSQL_SSL_MODE"
+        },
+        {
+          "name": "IPMGR_PGSQL_ROOT_CERTIFICATE_FILE"
+        },
+        {
+          "name": "IPMGR_PGSQL_CONNECTION_TIMEOUT"
+        },
+        {
+          "name": "IPMGR_PGSQL_BINARY_PARAMETERS"
+        },
+        {
+          "name": "pgsql"
+        },
+        {
+          "name": "IPMGR_TLS_CERTIFICATE"
+        },
+        {
+          "name": "IPMGR_TLS_PRIVATE_KEY"
+        },
+        {
+          "name": "NATS_HOST"
+        },
+        {
+          "name": "NATS_USERNAME"
+        },
+        {
+          "name": "NATS_PASSWORD_FILE"
+        },
+        {
+          "name": "NATS_USE_TLS"
+        },
+        {
+          "name": "nats"
+        },
+        {
+          "name": "NATS_PORT"
+        },
+        {
+          "name": "HEAPSTER_HOST"
+        },
+        {
+          "name": "HEAPSTER_PORT"
+        },
+        {
+          "name": "LOG_LEVEL"
+        },
+        {
+          "name": "ipmgr"
+        },
+        {
+          "name": "ipmgr-https-key"
+        },
+        {
+          "name": "ipmgr-https-cert"
+        },
+        {
+          "name": "IPMGR_PROVIDER"
+        },
+        {
+          "name": "FLIGHTRECORDER_HOST"
+        },
+        {
+          "name": "FLIGHTRECORDER_PORT"
+        },
+        {
+          "name": "DOMAIN_SUFFIX"
+        },
+        {
+          "name": "AWS_REGION"
+        },
+        {
+          "name": "AWS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "AWS_MASTER_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_NODE_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_GLUSTERFS_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_INSTANCE_TYPE"
+        },
+        {
+          "name": "AWS_LINUX_AMI"
+        },
+        {
+          "name": "AWS_WINDOWS2012R2_AMI"
+        },
+        {
+          "name": "AWS_VPC_ID"
+        },
+        {
+          "name": "AWS_KEYPAIR"
+        },
+        {
+          "name": "AWS_KEYPAIR_FILE"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "name": "AWS_SECRET_KEY_FILE"
+        },
+        {
+          "name": "AWS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "AWS_PUBLIC_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_PRIVATE_SUBNET_IDS_AND_AZ"
+        },
+        {
+          "name": "AWS_MASTER_POLICY_ARN"
+        },
+        {
+          "name": "AWS_MASTER_ROLE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_MASTER_PROFILE_NAME"
+        },
+        {
+          "name": "AWS_NODE_POLICY_ARN"
+        },
+        {
+          "name": "AWS_NODE_ROLE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_ARN"
+        },
+        {
+          "name": "AWS_NODE_PROFILE_NAME"
+        },
+        {
+          "name": "AWS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "aws-secret-key"
+        },
+        {
+          "name": "keypair"
+        },
+        {
+          "name": "OS_CACERT_FILE"
+        },
+        {
+          "name": "openstack-ca-crt"
+        },
+        {
+          "name": "OS_AUTH_URL"
+        },
+        {
+          "name": "OS_USERNAME"
+        },
+        {
+          "name": "OS_PASSWORD_FILE"
+        },
+        {
+          "name": "os-password"
+        },
+        {
+          "name": "OS_DOMAIN_NAME"
+        },
+        {
+          "name": "OS_PROJECT_ID"
+        },
+        {
+          "name": "OS_PROJECT_NAME"
+        },
+        {
+          "name": "OS_INSECURE"
+        },
+        {
+          "name": "OS_ENDPOINT_TYPE"
+        },
+        {
+          "name": "OS_REGION_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_NAME"
+        },
+        {
+          "name": "OS_FLOATING_IP_POOL_ID"
+        },
+        {
+          "name": "OS_NETWORK_ID"
+        },
+        {
+          "name": "OS_SUBNET_ID"
+        },
+        {
+          "name": "OS_AVAILABILITY_ZONES"
+        },
+        {
+          "name": "OS_MASTER_FLAVOR_ID"
+        },
+        {
+          "name": "OS_NODE_FLAVOR_ID"
+        },
+        {
+          "name": "OS_GLUSTERFS_FLAVOR_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_FLAVOR_ID"
+        },
+        {
+          "name": "OS_LINUX_IMAGE_ID"
+        },
+        {
+          "name": "OS_WINDOWS2012R2_IMAGE_ID"
+        },
+        {
+          "name": "OS_WINDOWS_PASSWORD_FILE"
+        },
+        {
+          "name": "OS_KEYPAIR_FILE"
+        },
+        {
+          "name": "OS_KEYPAIR"
+        },
+        {
+          "name": "OS_JUMPBOX_CIDR"
+        },
+        {
+          "name": "OS_LOADBALANCER_CIDR"
+        },
+        {
+          "name": "os-keypair"
+        },
+        {
+          "name": "vs-keypair"
+        },
+        {
+          "name": "VS_USERNAME"
+        },
+        {
+          "name": "VS_PASSWORD_FILE"
+        },
+        {
+          "name": "vs-password"
+        },
+        {
+          "name": "VS_SERVER"
+        },
+        {
+          "name": "VS_INSECURE"
+        },
+        {
+          "name": "VS_NETWORK_NAME"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_START"
+        },
+        {
+          "name": "VS_LB_VIP_ALLOCATION_END"
+        },
+        {
+          "name": "VS_LB_VIRTUAL_ROUTER_ID"
+        },
+        {
+          "name": "VS_CIDATA_ISO"
+        },
+        {
+          "name": "VS_DATASTORE"
+        },
+        {
+          "name": "VS_DATACENTER"
+        },
+        {
+          "name": "VS_CLUSTERS"
+        },
+        {
+          "name": "VS_FOLDER"
+        },
+        {
+          "name": "VS_KEYPAIR_FILE"
+        },
+        {
+          "name": "VS_LINUX_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_VMDK_SOURCE"
+        },
+        {
+          "name": "VS_MASTER_NUM_VCPUS"
+        },
+        {
+          "name": "VS_NODE_NUM_VCPUS"
+        },
+        {
+          "name": "VS_GLUSTERFS_NUM_VCPUS"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_NUM_VCPUS"
+        },
+        {
+          "name": "VS_MASTER_MEM_MB"
+        },
+        {
+          "name": "VS_NODE_MEM_MB"
+        },
+        {
+          "name": "VS_GLUSTERFS_MEM_MB"
+        },
+        {
+          "name": "VS_WINDOWS2012R2_MEM_MB"
+        },
+        {
+          "name": "VS_NODE_IP"
+        },
+        {
+          "name": "VS_DISK_TYPE"
+        },
+        {
+          "name": "UAA_ADMIN_CLIENT_SECRET_FILE"
+        },
+        {
+          "name": "uaa-client-secret"
+        },
+        {
+          "name": "uaa-token-verification-key"
+        },
+        {
+          "name": "uaa-tls-cert"
+        },
+        {
+          "name": "uaa-tls-key"
+        },
+        {
+          "name": "uaa-keystore-password"
+        },
+        {
+          "name": "TOKEN_VERIFICATION_KEY_FILE"
+        },
+        {
+          "name": "IPMGR_CATALOG_LOCATION"
+        },
+        {
+          "name": "REPOSITORY_PATH"
+        },
+        {
+          "name": "CA_CERT_FILE"
+        },
+        {
+          "name": "ca-cert"
+        },
+        {
+          "name": "HCP_DOMAIN_NAME"
+        },
+        {
+          "name": "HCP_LOADBALANCER_TIMEOUT_MIN"
+        },
+        {
+          "name": "HCP_VOLUME_TIMEOUT_MIN"
+        },
+        {
+          "name": "IPMGR_ENFORCE_QUOTA"
+        },
+        {
+          "name": "OS_COMPUTE_AZS_AND_STORAGE_AZS"
+        }
+      ],
+      "min_instances": 1,
+      "max_instances": 1,
+      "retry_count": 100,
+      "timeout": 3600
+    }
+  ]
+}

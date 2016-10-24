@@ -1,10 +1,10 @@
 {
   "description": "Control Plane for Helion Stackato",
   "categories": [
-    "HCP"
+    "Platform Services"
   ],
   "labels": [
-    "HCP"
+    "Helion Control Plane"
   ],
   "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/stackato-core.png",
   "type": "local"

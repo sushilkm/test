@@ -10,7 +10,7 @@
             "workload_type": "container",
             "version": "1.0.6-0-gdea46d6",
             "vendor": "HPE",
-            "repository": "docker.io/stackatodev",
+            "repository": "docker.io/stackato",
             "image": "hsm-sidecar-dev-mysql:1.0.6-0-gdea46d6",
             "min_RAM_mb": 50,
             "min_disk_gb": 1,

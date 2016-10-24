@@ -142,7 +142,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-preflight-upgrade",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-rest-service:391f98e3f30a367087f2c27ae069ebea8cb151b3",
       "workload_type": "container",
       "min_RAM_mb": 256,
@@ -198,7 +198,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-user-setup",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-user-setup-postflight:79250f9206f47df1a3feff617ffe25c0ac1445ba",
       "workload_type": "container",
       "min_RAM_mb": 256,
@@ -229,7 +229,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-update-database",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-rest-service:391f98e3f30a367087f2c27ae069ebea8cb151b3",
       "workload_type": "container",
       "min_RAM_mb": 256,
@@ -378,7 +378,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-ha",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-ha:96f150a221deba4adfa898c48fab988a3742f82e",
       "min_RAM_mb": 256,
       "min_disk_gb": 1,
@@ -417,7 +417,7 @@
       "version": "5.6",
       "vendor": "percona",
       "external_name": "pxc-node1",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-mysql:37fc1eaa2e97c992bf0592b51d54e5ba6edee28f",
       "entrypoint": [
         "/start.sh"
@@ -521,7 +521,7 @@
       "version": "5.6",
       "vendor": "percona",
       "external_name": "pxc-node2",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-mysql:37fc1eaa2e97c992bf0592b51d54e5ba6edee28f",
       "entrypoint": [
         "/start.sh"
@@ -625,7 +625,7 @@
       "version": "5.6",
       "vendor": "percona",
       "external_name": "pxc-node3",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-mysql:37fc1eaa2e97c992bf0592b51d54e5ba6edee28f",
       "entrypoint": [
         "/start.sh"
@@ -729,7 +729,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "concourse-db",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-concourse-db:004048e99797b9d25d56b537534b1e95748a7c34",
       "min_RAM_mb": 1024,
       "min_disk_gb": 1,
@@ -775,7 +775,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "registry-mirror",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-docker-registry:f71db0fe3bc9164b20d95c7ab603a6dc8005c969",
       "min_RAM_mb": 512,
       "min_disk_gb": 1,
@@ -825,7 +825,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "concourse-worker",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-concourse-bin:b9cd6b5f54651aa95c5eea00a57a8d78e1b2a3a1",
       "entrypoint": [
         "/usr/local/bin/dumb-init",
@@ -886,7 +886,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "concourse-web",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-concourse-bin:b9cd6b5f54651aa95c5eea00a57a8d78e1b2a3a1",
       "entrypoint": [
         "/usr/local/bin/dumb-init",
@@ -956,7 +956,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-watchdog",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-rest-service:391f98e3f30a367087f2c27ae069ebea8cb151b3",
       "entrypoint": [
         "/app/start.sh",
@@ -1021,7 +1021,7 @@
       "version": "1.0.0",
       "vendor": "HPE",
       "external_name": "hce-rest",
-      "repository":"registry-1.docker.io/stackatodev",
+      "repository":"docker.io/stackato",
       "image": "hce-rest-service:391f98e3f30a367087f2c27ae069ebea8cb151b3",
       "entrypoint": [
         "/app/start.sh",
@@ -1120,8 +1120,8 @@
       "name": "HCE_IMAGE_REGISTRY_URL",
       "description": "URL for the image registry that contains HCE System Images",
       "data_type": "string",
-      "default": "https://registry-1.docker.io/stackatodev",
-      "example": "https://registry-1.docker.io/stackatodev",
+      "default": "https://registry-1.docker.io/stackato",
+      "example": "https://registry-1.docker.io/stackato",
       "required": true,
       "secret": false
     },
