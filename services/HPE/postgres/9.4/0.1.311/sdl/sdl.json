@@ -1,0 +1,248 @@
+{
+    "name": "postgres",
+    "product_version": "9.4",
+    "sdl_version": "0.1.311",
+    "vendor": "HPE",
+    "volumes": [
+        {
+            "name": "postgres-volume",
+            "size_gb": 1,
+            "filesystem": "ext4",
+            "shared": false
+        }
+    ],
+    "components": [
+        {
+            "name": "postgres",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-dev-postgres-db:0.1.311",
+            "min_RAM_mb": 512,
+            "max_RAM_mb": 5120,
+            "min_VCPU": 1,
+            "max_VCPU": 4,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "labels": [
+                "postgres"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "pgsql",
+                    "protocol": "TCP",
+                    "source_port": 5432,
+                    "target_port": 5432,
+                    "public": false
+                }
+            ],
+            "volume_mounts": [
+                {
+                    "volume_name": "postgres-volume",
+                    "mountpoint": "/var/lib/postgresql/data"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "POSTGRES_PASSWORD"
+                }
+            ]
+        },
+        {
+            "name": "hsm-side-car",
+            "workload_type": "container",
+            "version": "latest",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-dev-postgres:0.1.311",
+            "min_RAM_mb": 50,
+            "min_disk_gb": 1,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "labels": [
+                "postgres-sidecar"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "pgsql-sidecar",
+                    "protocol": "TCP",
+                    "source_port": 8081,
+                    "target_port": 8081,
+                    "public": false
+                }
+            ],
+            "volume_mounts": [],
+            "parameters": [
+                {
+                    "name": "SERVICE_POSTGRES_DBNAME"
+                },
+                {
+                    "name": "SERVICE_POSTGRES_USER"
+                },
+                {
+                    "name": "POSTGRES_PASSWORD"
+                },
+                {
+                    "name": "SERVICE_POSTGRES_SSLMODE"
+                },
+                {
+                    "name": "SIDECAR_API_KEY"
+                },
+                {
+                    "name": "SIDECAR_CA_CERT"
+                },
+                {
+                    "name": "tls-private-key-file"
+                },
+                {
+                    "name": "tls-cert-file"
+                }
+            ]
+        },
+        {
+            "name": "public-port",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-port-forwarder:0.1.311",
+            "min_RAM_mb": 50,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "min_instances": 0,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "pgsql-public",
+                    "protocol": "TCP",
+                    "source_port": 5432,
+                    "target_port": 5432,
+                    "public": true
+                }
+            ],
+            "volume_mounts": [],
+            "parameters": [
+                {
+                    "name": "TARGET_SERVICE_HOST"
+                },
+                {
+                    "name": "TARGET_SERVICE_PORT"
+                }
+            ]
+        }
+    ],
+    "parameters": [
+        {
+            "name": "SERVICE_POSTGRES_USER",
+            "description": "Postgres user used by the sidecar",
+            "example": "postgres",
+            "required": true,
+            "secret": false,
+            "default": "postgres"
+        },
+        {
+            "name": "SERVICE_POSTGRES_DBNAME",
+            "description": "Postgres database name",
+            "example": "postgres",
+            "required": true,
+            "secret": false,
+            "default": "postgres"
+        },
+        {
+            "name": "SERVICE_POSTGRES_SSLMODE",
+            "description": "Postgres port the sidecar will connect to",
+            "example": "disable",
+            "required": true,
+            "secret": false,
+            "default": "disable"
+        },
+        {
+            "name": "SIDECAR_API_KEY",
+            "description": "API Key used to authenticate consumers of the sidecar API",
+            "example": "my-secret-key",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "TARGET_SERVICE_HOST",
+            "description": "Target HOST",
+            "default": "postgres-int",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "TARGET_SERVICE_PORT",
+            "description": "Target PORT",
+            "default": "5432",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "POSTGRES_PASSWORD",
+            "description": "Postgres password used by the server",
+            "example": "changeme",
+            "required": true,
+            "secret": false,
+            "generator": {
+                "id": "POSTGRES_PASSWORD",
+                "generate": {
+                    "type": "Password",
+                    "characters": "abcdefghijklmnopqrstuvwxyz1234567890"
+                }
+            }
+        },
+        {
+            "name": "SIDECAR_CA_CERT",
+            "description": "placeholder",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": true,
+            "secret": false,
+            "generator": {
+                "id": "cacert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "CACertificate"
+                }
+            }
+        },
+        {
+            "name": "tls-private-key-file",
+            "description": "Private certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "private_key",
+                    "key_length": 4096,
+                    "type": "Certificate"
+                }
+            }
+        },
+        {
+            "name": "tls-cert-file",
+            "description": "Public certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "Certificate"
+                }
+            }
+        }
+    ]
+}

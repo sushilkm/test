@@ -1,0 +1,76 @@
+{
+    "name": "havenondemand",
+    "product_version": "1.0.0",
+    "sdl_version": "0.1.223",
+    "vendor": "HPE",
+    "volumes": [],
+    "components": [
+        {
+            "name": "csm-side-car",
+            "version": "0.1.223",
+            "vendor": "HPE",
+            "external_name": "haven-on-demand-csm-side-car",
+            "image": "docker-registry.helion.space:443/catalog-service-manager/csm:0.1.223",
+            "min_RAM_mb": 50,
+            "min_disk_gb": 1,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "workload_type": "container",
+            "capabilities": [],
+            "labels": [
+                "haven-on-demand",
+                "hod",
+                "csm"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "csm",
+                    "protocol": "TCP",
+                    "source_port": 8081,
+                    "target_port": 8081,
+                    "public": false
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "CSM_API_KEY"
+                },
+                {
+                    "name": "CSM_PARAMETERS"
+                },
+                {
+                    "name": "HOD_API_KEY"
+                }
+            ]
+        }
+    ],
+    "parameters": [
+        {
+            "name": "HOD_API_KEY",
+            "description": "The API Key developers will use when connecting to HavenOnDemand",
+            "example": "36XXX14-2f7c-4XXd-aX12-eXXX35bXXX0a",
+            "data_type": "string",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "CSM_PARAMETERS",
+            "description": "Parameters for the csm side-car to be supplied to application on bind",
+            "default": "HOD_API_KEY",
+            "data_type": "string",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "CSM_API_KEY",
+            "description": "CSM side-car api key",
+            "default": "csm-auth-token",
+            "example": "csm-auth-token",
+            "data_type": "string",
+            "required": true,
+            "secret": false
+        }
+    ]
+}

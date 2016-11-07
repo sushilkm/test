@@ -1,0 +1,225 @@
+{
+    "name": "mongo",
+    "product_version": "3.0",
+    "sdl_version": "0.1.311",
+    "vendor": "HPE",
+    "volumes": [
+        {
+            "name": "mongo-volume",
+            "size_gb": 1,
+            "filesystem": "ext4",
+            "shared": false
+        }
+    ],
+    "components": [
+        {
+            "name": "mongo",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-dev-mongo-db:0.1.311",
+            "min_RAM_mb": 512,
+            "max_RAM_mb": 5120,
+            "min_VCPU": 1,
+            "max_VCPU": 4,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "labels": [
+                "mongo"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "mongo",
+                    "protocol": "TCP",
+                    "source_port": 27017,
+                    "target_port": 27017,
+                    "public": false
+                }
+            ],
+            "volume_mounts": [
+                {
+                    "volume_name": "mongo-volume",
+                    "mountpoint": "/data/db"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "MONGODB_PASS"
+                }
+            ]
+        },
+        {
+            "name": "hsm-side-car",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-dev-mongo:0.1.311",
+            "min_RAM_mb": 50,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "labels": [
+                "mongo-hsm-sidecar"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "mongo-sidecar",
+                    "protocol": "TCP",
+                    "source_port": 8081,
+                    "target_port": 8081,
+                    "public": false
+                }
+            ],
+            "volume_mounts": [],
+            "parameters": [
+                {
+                    "name": "SERVICE_MONGO_USER"
+                },
+                {
+                    "name": "MONGODB_PASS"
+                },
+                {
+                    "name": "SIDECAR_API_KEY"
+                },
+                {
+                    "name": "SIDECAR_CA_CERT"
+                },
+                {
+                    "name": "tls-private-key-file"
+                },
+                {
+                    "name": "tls-cert-file"
+                }
+            ]
+        },
+        {
+            "name": "public-port",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-port-forwarder:0.1.311",
+            "min_RAM_mb": 50,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "min_instances": 0,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "mongodb-public",
+                    "protocol": "TCP",
+                    "source_port": 27017,
+                    "target_port": 27017,
+                    "public": true
+                }
+            ],
+            "volume_mounts": [],
+            "parameters": [
+                {
+                    "name": "TARGET_SERVICE_HOST"
+                },
+                {
+                    "name": "TARGET_SERVICE_PORT"
+                }
+            ]
+        }
+    ],
+    "parameters": [
+        {
+            "name": "SERVICE_MONGO_USER",
+            "description": "Mongo user used by the sidecar",
+            "example": "admin",
+            "required": true,
+            "secret": false,
+            "default": "admin"
+        },
+        {
+            "name": "SIDECAR_API_KEY",
+            "description": "API Key used to authenticate consumers of the sidecar API",
+            "example": "my-secret-key",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "MONGODB_PASS",
+            "description": "Mongo password used by the server",
+            "example": "changeme",
+            "required": true,
+            "secret": false,
+            "generator": {
+                "id": "MONGODB_PASS",
+                "generate": {
+                    "type": "Password",
+                    "characters": "abcdefghijklmnopqrstuvwxyz1234567890"
+                }
+            }
+        },
+        {
+            "name": "TARGET_SERVICE_HOST",
+            "description": "Target HOST",
+            "default": "mongo-int",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "TARGET_SERVICE_PORT",
+            "description": "Target PORT",
+            "default": "27017",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "SIDECAR_CA_CERT",
+            "description": "placeholder",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": true,
+            "secret": false,
+            "generator": {
+                "id": "cacert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "CACertificate"
+                }
+            }
+        },
+        {
+            "name": "tls-private-key-file",
+            "description": "Private certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "private_key",
+                    "key_length": 4096,
+                    "type": "Certificate"
+                }
+            }
+        },
+        {
+            "name": "tls-cert-file",
+            "description": "Public certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "Certificate"
+                }
+            }
+        }
+    ]
+}

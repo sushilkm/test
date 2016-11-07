@@ -1,0 +1,7 @@
+{
+    "disabled":
+    {
+        "vulnerability": false,
+        "reason": "Not compatible with latest HCP (>=1.2.44)"
+    }
+}

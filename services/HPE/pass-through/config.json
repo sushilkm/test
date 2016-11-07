@@ -6,6 +6,5 @@
   "labels": [
     "Generic Connector"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/passthrough.png",
   "type": "local"
 }

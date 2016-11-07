@@ -7,6 +7,5 @@
     "Microsoft® SQL Server® 2014",
     "Connector"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/database.png",
   "type": "by-ref"
 }

@@ -7,7 +7,6 @@
     "RabbitMQ",
     "Dev Grade"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/messaging.png",
   "documentation_url": "https://www.rabbitmq.com/documentation.html",
   "license_url": "https://www.rabbitmq.com/mpl.html",
   "type": "local"

@@ -8,7 +8,6 @@
     "Connector",
     "PostGres"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/database.png",
   "documentation_url": "https://aws.amazon.com/documentation/rds/",
   "license_url": "https://aws.amazon.com/asl/",
   "type": "by-ref"

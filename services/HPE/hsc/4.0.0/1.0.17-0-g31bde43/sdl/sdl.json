@@ -13,8 +13,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-etcd2:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-etcd2:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -81,8 +81,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-stolon:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-stolon:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -138,8 +138,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-stolon:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-stolon:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -223,8 +223,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-stolon:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-stolon:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -274,8 +274,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-proxy:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-proxy:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -374,8 +374,8 @@
       "min_VCPU": 1,
       "platform": "linux-x86_64",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-console:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-console:1.0.17-0-g31bde43",
       "workload_type": "container",
       "entrypoint": [],
       "parameters": [
@@ -437,8 +437,8 @@
       "platform": "linux-x86_64",
       "workload_type": "container",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-preflight-job:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-preflight-job:1.0.17-0-g31bde43",
       "entrypoint": [],
       "parameters": [
         {
@@ -482,8 +482,8 @@
       "platform": "linux-x86_64",
       "workload_type": "container",
       "capabilities": [],
-      "repository": "docker.io/stackato",
-      "image": "hsc-postflight-job:1.0.17-0-g31bde43",
+      "repository": "docker-registry.helion.space:443",
+      "image": "hsc/hsc-postflight-job:1.0.17-0-g31bde43",
       "entrypoint": [],
       "parameters": [
         {

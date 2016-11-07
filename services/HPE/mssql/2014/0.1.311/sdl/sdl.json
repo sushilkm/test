@@ -1,0 +1,145 @@
+{
+    "name": "mssql",
+    "product_version": "2014",
+    "sdl_version": "0.1.311",
+    "vendor": "HPE",
+    "volumes": [],
+    "components": [
+        {
+            "name": "hsm-side-car",
+            "workload_type": "container",
+            "version": "0.1.311",
+            "vendor": "HPE",
+            "repository": "docker-registry.helion.space:443",
+            "image": "hsm-sidecar/sidecar-dev-mssql:0.1.311",
+            "min_RAM_mb": 50,
+            "min_VCPU": 1,
+            "platform": "linux-x86_64",
+            "capabilities": [],
+            "affinity": [],
+            "labels": [
+                "mssql-hsm-sidecar"
+            ],
+            "min_instances": 1,
+            "max_instances": 1,
+            "service_ports": [
+                {
+                    "name": "mssql-sidecar",
+                    "protocol": "TCP",
+                    "source_port": 8081,
+                    "target_port": 8081,
+                    "public": false
+                }
+            ],
+            "volume_mounts": [],
+            "parameters": [
+                {
+                    "name": "MSSQL_HOST"
+                },
+                {
+                    "name": "MSSQL_PORT"
+                },
+                {
+                    "name": "MSSQL_USER"
+                },
+                {
+                    "name": "MSSQL_PASS"
+                },
+                {
+                    "name": "SIDECAR_API_KEY"
+                },
+                {
+                    "name": "SIDECAR_CA_CERT"
+                },
+                {
+                    "name": "tls-private-key-file"
+                },
+                {
+                    "name": "tls-cert-file"
+                }
+            ]
+        }
+    ],
+    "parameters": [
+        {
+            "name": "MSSQL_HOST",
+            "description": "MSSQL host used by the sidecar",
+            "example": "sqlserver.test",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "MSSQL_PORT",
+            "description": "MSSQL port used by the sidecar",
+            "example": "1433",
+            "required": true,
+            "secret": false,
+            "default": "1433"
+        },
+        {
+            "name": "MSSQL_USER",
+            "description": "MSSQL user used by the sidecar",
+            "example": "sa",
+            "required": true,
+            "secret": false,
+            "default": "sa"
+        },
+        {
+            "name": "MSSQL_PASS",
+            "description": "MSSQL password used by the sidecar",
+            "example": "changeme",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "SIDECAR_API_KEY",
+            "description": "API Key used to authenticate consumers of the sidecar API",
+            "example": "my-secret-key",
+            "required": true,
+            "secret": false
+        },
+        {
+            "name": "SIDECAR_CA_CERT",
+            "description": "placeholder",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": true,
+            "secret": false,
+            "generator": {
+                "id": "cacert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "CACertificate"
+                }
+            }
+        },
+        {
+            "name": "tls-private-key-file",
+            "description": "Private certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "private_key",
+                    "key_length": 4096,
+                    "type": "Certificate"
+                }
+            }
+        },
+        {
+            "name": "tls-cert-file",
+            "description": "Public certificate string for TLS with endlines preserved with '\n'",
+            "example": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
+            "required": false,
+            "secret": true,
+            "generator": {
+                "id": "tls_cert",
+                "generate": {
+                    "value_type": "certificate",
+                    "type": "Certificate"
+                }
+            }
+        }
+    ]
+}

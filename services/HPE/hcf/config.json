@@ -3,7 +3,6 @@
   "categories": [
     "Platform Services"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/stackato-core.png",
   "documentation_url": "https://docs.cloudfoundry.org",
   "labels": [
     "Helion Cloud Foundry"

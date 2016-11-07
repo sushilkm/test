@@ -7,7 +7,6 @@
     "MySQL",
     "Dev Grade"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/database.png",
   "documentation_url": "https://dev.mysql.com/doc/",
   "license_url": "https://dev.mysql.com/doc/refman/5.5/en/preface.html",
   "type": "local"

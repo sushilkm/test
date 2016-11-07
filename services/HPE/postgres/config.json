@@ -3,7 +3,6 @@
   "categories": [
     "Data"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/database.png",
   "documentation_url": "https://www.postgresql.org/docs/manuals/",
   "license_url": "https://www.postgresql.org/about/licence/",
   "labels": [

@@ -9,7 +9,7 @@
             "name": "hsm-side-car",
             "version": "1.0.6-0-gdea46d6",
             "vendor": "HPE",
-            "repository": "docker.io/stackato",
+            "repository": "docker.io/stackatodev",
             "image": "hsm-sidecar:1.0.6-0-gdea46d6",
             "min_RAM_mb": 50,
             "min_disk_gb": 1,

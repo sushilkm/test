@@ -6,6 +6,5 @@
   "labels": [
     "Helion Console"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/stackato-core.png",
   "type": "local"
 }

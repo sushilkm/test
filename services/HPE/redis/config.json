@@ -7,7 +7,6 @@
     "Redis",
     "Dev Grade"
   ],
-  "icon_url": "https://release.stackato.com/downloads/hsm/service-icons/database.png",
   "documentation_url": "http://redis.io/documentation",
   "license_url": "http://redis.io/topics/license",
   "type": "local"
