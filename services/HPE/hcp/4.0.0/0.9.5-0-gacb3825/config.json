@@ -1,8 +1,0 @@
-{
-  "upgrade_from": [{
-		"product_version": "4.0.0",
-		"sdl_versions": [
-			">=0.9.0"
-		]
-	}]
-}
