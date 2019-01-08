@@ -60,4 +60,4 @@ So next time you want to publish new SDL please follow this process:
 
 7. We are still working on making these checks full proof, and there might still be some corner cases which may not be be caught by these checks. So even if this gate passes we would like one human review on this, to make sure we are not polluting the release bucket, so please ping us in #hsm channel or via slack directly, to help get this reviewed before we merge it.
 
-8. Once this patch merges, we have another concourse merge pipeline which will publish your change to the s3 bucket
+8. Once this patch merges, we have another concourse merge pipeline which will publish your change to the s3 bucket.
