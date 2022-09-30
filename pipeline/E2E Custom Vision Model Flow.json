@@ -1,0 +1,102 @@
+{
+          "name": "E2E Custom Vision Model Flow",
+          "properties": {
+                    "activities": [
+                              {
+                                        "name": "Transforms",
+                                        "type": "ExecutePipeline",
+                                        "dependsOn": [],
+                                        "userProperties": [],
+                                        "typeProperties": {
+                                                  "pipeline": {
+                                                            "referenceName": "Custom Vision Model Transforms v2",
+                                                            "type": "PipelineReference"
+                                                  },
+                                                  "waitOnCompletion": true,
+                                                  "parameters": {
+                                                            "Prefix": {
+                                                                      "value": "@pipeline().parameters.Prefix",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "StorageAccountName": {
+                                                                      "value": "@pipeline().parameters.StorageAccountName",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "AOI": {
+                                                                      "value": "@pipeline().parameters.AOI",
+                                                                      "type": "Expression"
+                                                            }
+                                                  }
+                                        }
+                              },
+                              {
+                                        "name": "Custom Vision Object Detection with AKS",
+                                        "type": "ExecutePipeline",
+                                        "dependsOn": [
+                                                  {
+                                                            "activity": "Transforms",
+                                                            "dependencyConditions": [
+                                                                      "Succeeded"
+                                                            ]
+                                                  }
+                                        ],
+                                        "userProperties": [],
+                                        "typeProperties": {
+                                                  "pipeline": {
+                                                            "referenceName": "Custom Vision Object Detection v2_aks",
+                                                            "type": "PipelineReference"
+                                                  },
+                                                  "waitOnCompletion": true,
+                                                  "parameters": {
+                                                            "Prefix": {
+                                                                      "value": "@pipeline().parameters.Prefix",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "StorageAccountName": {
+                                                                      "value": "@pipeline().parameters.StorageAccountName",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "AksManagementRestApiURL": {
+                                                                      "value": "@pipeline().parameters.AksManagementRestApiURL",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "PersistentVolumeClaim": {
+                                                                      "value": "@pipeline().parameters.PersistentVolumeClaim",
+                                                                      "type": "Expression"
+                                                            }
+                                                  }
+                                        }
+                              }
+                    ],
+                    "parameters": {
+                              "Prefix": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "StorageAccountName": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "AOI": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "AksManagementRestApiURL": {
+                                        "type": "string",
+                                        "defaultValue": "https://management.azure.com/subscriptions/fcdfe1b7-8458-44e1-be61-1422e03cb202/resourcegroups/suskum192-orc-rg/providers/Microsoft.ContainerService/managedClusters/aksfq5fvsfy7o/runCommand?api-version=2022-02-01"
+                              },
+                              "PersistentVolumeClaim": {
+                                        "type": "string",
+                                        "defaultValue": "suskum192-vision-fileshare"
+                              }
+                    },
+                    "variables": {
+                              "Storage_Account_Conn_String": {
+                                        "type": "String"
+                              }
+                    },
+                    "annotations": [],
+                    "lastPublishTime": "2022-03-06T05:42:39Z"
+          },
+          "type": "Microsoft.Synapse/workspaces/pipelines"
+}
