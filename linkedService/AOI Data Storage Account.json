@@ -1,0 +1,23 @@
+{
+    "name": "AOI Data Storage Account",
+    "properties": {
+        "annotations": [],
+        "type": "AzureBlobStorage",
+        "typeProperties": {
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=rawdatazd5ppnktya;EndpointSuffix=core.windows.net;",
+            "accountKey": {
+                "type": "AzureKeyVaultSecret",
+                "store": {
+                    "referenceName": "AOI Pipeline Key Vault",
+                    "type": "LinkedServiceReference"
+                },
+                "secretName": "GeospatialStorageAccountKey"
+            }
+        },
+        "connectVia": {
+            "referenceName": "AutoResolveIntegrationRuntime",
+            "type": "IntegrationRuntimeReference"
+        }
+    },
+    "type": "Microsoft.Synapse/workspaces/linkedservices"
+}

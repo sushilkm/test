@@ -2,7 +2,7 @@
     "name": "gld",
     "properties": {
         "linkedServiceName": {
-            "referenceName": "AOI Geospatial v2",
+            "referenceName": "AOI Geospatial",
             "type": "LinkedServiceReference"
         },
         "parameters": {
