@@ -4,7 +4,7 @@
         "nbformat": 4,
         "nbformat_minor": 2,
         "bigDataPool": {
-            "referenceName": "poolxowclkfvmk",
+            "referenceName": "poolcz4wyqsq3e",
             "type": "BigDataPoolReference"
         },
         "sessionProperties": {
@@ -31,10 +31,10 @@
                 "name": "python"
             },
             "a365ComputeOptions": {
-                "id": "/subscriptions/fcdfe1b7-8458-44e1-be61-1422e03cb202/resourceGroups/suskum194-pipeline-rg/providers/Microsoft.Synapse/workspaces/synwsxowclkfvmk/bigDataPools/poolxowclkfvmk",
-                "name": "poolxowclkfvmk",
+                "id": "/subscriptions/fcdfe1b7-8458-44e1-be61-1422e03cb202/resourceGroups/suskumpr1-pipeline-rg/providers/Microsoft.Synapse/workspaces/synwscz4wyqsq3e/bigDataPools/poolcz4wyqsq3e",
+                "name": "poolcz4wyqsq3e",
                 "type": "Spark",
-                "endpoint": "https://synwsxowclkfvmk.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/poolxowclkfvmk",
+                "endpoint": "https://synwscz4wyqsq3e.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/poolcz4wyqsq3e",
                 "auth": {
                     "type": "AAD",
                     "authResource": "https://dev.azuresynapse.net"

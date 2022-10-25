@@ -1,189 +1,110 @@
 {
-    "name": "E2E Custom Vision Model Flow",
-    "properties": {
-        "activities": [
-            {
-                "name": "Transforms",
-                "type": "ExecutePipeline",
-                "dependsOn": [],
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "Custom Vision Model Transforms",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true,
+          "name": "E2E Custom Vision Model Flow",
+          "properties": {
+                    "activities": [
+                              {
+                                        "name": "Transforms",
+                                        "type": "ExecutePipeline",
+                                        "dependsOn": [],
+                                        "userProperties": [],
+                                        "typeProperties": {
+                                                  "pipeline": {
+                                                            "referenceName": "Custom Vision Model Transforms",
+                                                            "type": "PipelineReference"
+                                                  },
+                                                  "waitOnCompletion": true,
+                                                  "parameters": {
+                                                            "Prefix": {
+                                                                      "value": "@pipeline().parameters.Prefix",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "StorageAccountName": {
+                                                                      "value": "@pipeline().parameters.StorageAccountName",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "AOI": {
+                                                                      "value": "@pipeline().parameters.AOI",
+                                                                      "type": "Expression"
+                                                            }
+                                                  }
+                                        }
+                              },
+                              {
+                                        "name": "Custom Vision Object Detection",
+                                        "type": "ExecutePipeline",
+                                        "dependsOn": [
+                                                  {
+                                                            "activity": "Transforms",
+                                                            "dependencyConditions": [
+                                                                      "Succeeded"
+                                                            ]
+                                                  }
+                                        ],
+                                        "userProperties": [],
+                                        "typeProperties": {
+                                                  "pipeline": {
+                                                            "referenceName": "Custom Vision Object Detection",
+                                                            "type": "PipelineReference"
+                                                  },
+                                                  "waitOnCompletion": true,
+                                                  "parameters": {
+                                                            "Prefix": {
+                                                                      "value": "@pipeline().parameters.Prefix",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "BatchName": {
+                                                                      "value": "@pipeline().parameters.BatchAccountName",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "JobName": {
+                                                                      "value": "@pipeline().parameters.BatchJobName",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "BatchLocation": {
+                                                                      "value": "@pipeline().parameters.BatchLocation",
+                                                                      "type": "Expression"
+                                                            },
+                                                            "StorageAccountName": {
+                                                                      "value": "@pipeline().parameters.StorageAccountName",
+                                                                      "type": "Expression"
+                                                            }
+                                                  }
+                                        }
+                              }
+                    ],
                     "parameters": {
-                        "Prefix": {
-                            "value": "@pipeline().parameters.Prefix",
-                            "type": "Expression"
-                        },
-                        "StorageAccountName": {
-                            "value": "@pipeline().parameters.StorageAccountName",
-                            "type": "Expression"
-                        },
-                        "AOI": {
-                            "value": "@pipeline().parameters.AOI",
-                            "type": "Expression"
-                        }
-                    }
-                }
-            },
-            {
-                "name": "Custom Vision Object Detection with AKS",
-                "type": "ExecutePipeline",
-                "dependsOn": [
-                    {
-                        "activity": "Transforms",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "Custom Vision Object Detection aks",
-                        "type": "PipelineReference"
+                              "Prefix": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "StorageAccountName": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "AOI": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "BatchAccountName": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "BatchJobName": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              },
+                              "BatchLocation": {
+                                        "type": "string",
+                                        "defaultValue": ""
+                              }
                     },
-                    "waitOnCompletion": true,
-                    "parameters": {
-                        "Prefix": {
-                            "value": "@pipeline().parameters.Prefix",
-                            "type": "Expression"
-                        },
-                        "StorageAccountName": {
-                            "value": "@pipeline().parameters.StorageAccountName",
-                            "type": "Expression"
-                        },
-                        "AksManagementRestApiURL": {
-                            "value": "@pipeline().parameters.AksManagementRestApiURL",
-                            "type": "Expression"
-                        },
-                        "PersistentVolumeClaim": {
-                            "value": "@pipeline().parameters.PersistentVolumeClaim",
-                            "type": "Expression"
-                        }
-                    }
-                }
-            },
-            {
-                "name": "Insert CV Object Detection Data Into DB",
-                "type": "SynapseNotebook",
-                "dependsOn": [
-                    {
-                        "activity": "Custom Vision Object Detection with AKS",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 3,
-                    "retryIntervalInSeconds": 60,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "notebook": {
-                        "referenceName": "Insert CV Object Detection Data Into DB Notebook Job",
-                        "type": "NotebookReference"
+                    "variables": {
+                              "Storage_Account_Conn_String": {
+                                        "type": "String"
+                              }
                     },
-                    "parameters": {
-                        "storage_account_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.StorageAccountName",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "container_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "folder_path": {
-                            "value": "pool-geolocation",
-                            "type": "string"
-                        },
-                        "key_vault_name": {
-                            "value": "kvpxowclkfvmk",
-                            "type": "string"
-                        },
-                        "storage_account_key_secret_name": {
-                            "value": "GeospatialStorageAccountKey",
-                            "type": "string"
-                        },
-                        "linked_service_name": {
-                            "value": "AOI Pipeline Key Vault",
-                            "type": "string"
-                        },
-                        "db_password_secret_name": {
-                            "value": "PostgresAdminPassword",
-                            "type": "string"
-                        },
-                        "db_username": {
-                            "value": "suskum194_admin_user@pgzd5ppnktya",
-                            "type": "string"
-                        },
-                        "db_host": {
-                            "value": "pgzd5ppnktya.postgres.database.azure.com",
-                            "type": "string"
-                        },
-                        "db_name": {
-                            "value": "postgres",
-                            "type": "string"
-                        },
-                        "db_port": {
-                            "value": "5432",
-                            "type": "int"
-                        },
-                        "ssl_root_path": {
-                            "value": "/opt/src/BaltimoreCyberTrustRoot.crt.pem",
-                            "type": "string"
-                        }
-                    },
-                    "snapshot": true,
-                    "sparkPool": {
-                        "referenceName": "poolxowclkfvmk",
-                        "type": "BigDataPoolReference"
-                    }
-                }
-            }
-        ],
-        "parameters": {
-            "Prefix": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "StorageAccountName": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "AOI": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "AksManagementRestApiURL": {
-                "type": "string",
-                "defaultValue": "https://management.azure.com/subscriptions/fcdfe1b7-8458-44e1-be61-1422e03cb202/resourcegroups/suskum194-orc-rg/providers/Microsoft.ContainerService/managedClusters/akssn4ujtl3bq/runCommand?api-version=2022-02-01"
-            },
-            "PersistentVolumeClaim": {
-                "type": "string",
-                "defaultValue": "suskum194-vision-fileshare"
-            }
-        },
-        "variables": {
-            "Storage_Account_Conn_String": {
-                "type": "String"
-            }
-        },
-        "annotations": [],
-        "lastPublishTime": "2022-03-06T05:42:39Z"
-    },
-    "type": "Microsoft.Synapse/workspaces/pipelines"
+                    "annotations": [],
+                    "lastPublishTime": "2022-03-06T05:42:39Z"
+          },
+          "type": "Microsoft.Synapse/workspaces/pipelines"
 }

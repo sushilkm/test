@@ -4,9 +4,9 @@
         "annotations": [],
         "type": "AzureBatch",
         "typeProperties": {
-            "batchUri": "https://__batch_account__.__location__.batch.azure.com",
-            "poolName": "__batch_pool_name__",
-            "accountName": "__batch_account__",
+            "batchUri": "https://stellarbatchdev.eastus.batch.azure.com",
+            "poolName": "suskumpr1-data-cpu-pool",
+            "accountName": "stellarbatchdev",
             "linkedServiceName": {
                 "referenceName": "AOI Batch Storage",
                 "type": "LinkedServiceReference"
