@@ -1,879 +1,874 @@
 {
-    "name": "Custom Vision Object Detection",
-    "properties": {
-        "activities": [
-            {
-                "name": "Wait for Custom Vision",
-                "type": "Until",
-                "dependsOn": [
-                    {
-                        "activity": "Custom Vision",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "userProperties": [],
-                "typeProperties": {
-                    "expression": {
-                        "value": "@and(and(not(equals(string(variables('FunctionCompleted')), 'running')), not(equals(string(variables('FunctionCompleted')), 'active'))), not(equals(string(variables('FunctionCompleted')), 'preparing')))",
-                        "type": "Expression"
-                    },
-                    "activities": [
-                        {
-                            "name": "Wait for Custom Vision Check",
-                            "type": "Wait",
-                            "dependsOn": [
-                                {
-                                    "activity": "Set FunctionCompleted Custom Vision",
-                                    "dependencyConditions": [
-                                        "Succeeded"
-                                    ]
-                                }
-                            ],
-                            "userProperties": [],
-                            "typeProperties": {
-                                "waitTimeInSeconds": 30
-                            }
-                        },
-                        {
-                            "name": "Check Status Custom Vision",
-                            "type": "WebActivity",
-                            "dependsOn": [],
-                            "policy": {
-                                "timeout": "7.00:00:00",
-                                "retry": 0,
-                                "retryIntervalInSeconds": 30,
-                                "secureOutput": false,
-                                "secureInput": false
-                            },
-                            "userProperties": [],
-                            "typeProperties": {
-                                "url": {
-                                    "value": "@concat('https://',pipeline().parameters.BatchName,'.',pipeline().parameters.BatchLocation,'.batch.azure.com/jobs/',pipeline().parameters.JobName,'/tasks/aoi-cv-task-', pipeline().RunId, '?api-version=2022-01-01.15.0')",
-                                    "type": "Expression"
-                                },
-                                "connectVia": {
-                                    "referenceName": "AutoResolveIntegrationRuntime",
-                                    "type": "IntegrationRuntimeReference"
-                                },
-                                "method": "GET",
-                                "authentication": {
-                                    "type": "MSI",
-                                    "resource": "https://batch.core.windows.net/"
-                                }
-                            }
-                        },
-                        {
-                            "name": "Set FunctionCompleted Custom Vision",
-                            "type": "SetVariable",
-                            "dependsOn": [
-                                {
-                                    "activity": "Check Status Custom Vision",
-                                    "dependencyConditions": [
-                                        "Succeeded"
-                                    ]
-                                }
-                            ],
-                            "userProperties": [],
-                            "typeProperties": {
-                                "variableName": "FunctionCompleted",
-                                "value": {
-                                    "value": "@activity('Check Status Custom Vision').output['state']",
-                                    "type": "Expression"
-                                }
-                            }
-                        },
-                        {
-                            "name": "Set FunctionError",
-                            "type": "SetVariable",
-                            "dependsOn": [
-                                {
-                                    "activity": "Check Status Custom Vision",
-                                    "dependencyConditions": [
-                                        "Failed"
-                                    ]
-                                }
-                            ],
-                            "userProperties": [],
-                            "typeProperties": {
-                                "variableName": "FunctionError",
-                                "value": {
-                                    "value": "@activity('Check Status Custom Vision').output['executionInfo']['failureInfo']",
-                                    "type": "Expression"
-                                }
-                            }
-                        }
-                    ],
-                    "timeout": "7.00:00:00"
-                }
-            },
-            {
-                "name": "Custom Vision",
-                "type": "WebActivity",
-                "dependsOn": [
-                    {
-                        "activity": "Copy Tiles",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Copy Config",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Copy Georeference Xml",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Delete Results Directory placeholder",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Delete Logs Directory placeholder",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "url": {
-                        "value": "@concat('https://',pipeline().parameters.BatchName,'.',pipeline().parameters.BatchLocation,'.batch.azure.com/jobs/',pipeline().parameters.JobName,'/tasks?api-version=2020-03-01.11.0')",
-                        "type": "Expression"
-                    },
-                    "connectVia": {
-                        "referenceName": "AutoResolveIntegrationRuntime",
-                        "type": "IntegrationRuntimeReference"
-                    },
-                    "method": "POST",
-                    "headers": {
-                        "Content-type": "application/json; odata=minimalmetadata; charset=utf-8"
-                    },
-                    "body": {
-                        "value": "@json(concat('{\n  \"id\": \"aoi-cv-task-', pipeline().RunId, '\",\n  \"commandLine\": \"\",\n  \"containerSettings\": {\n    \"imageName\": \"', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['algImageName'], '\",\n    \"containerRunOptions\": \"--rm --workdir / -v /mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix, ':', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['mountedDirectory'], '\"\n  },\n  \"environmentSettings\": [\n      {\n          \"name\": \"APP_INPUT_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'],'\"\n      },\n      {\n          \"name\": \"APP_OUTPUT_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'],'\"\n      },\n      {\n          \"name\": \"APP_CONFIG_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName'],'\"\n      }\n  ]\n}'))",
-                        "type": "Expression"
-                    },
-                    "authentication": {
-                        "type": "MSI",
-                        "resource": "https://batch.core.windows.net/"
-                    }
-                }
-            },
-            {
-                "name": "Pool Geolocation",
-                "type": "SparkJob",
-                "dependsOn": [
-                    {
-                        "activity": "Copy Xml",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Copy Json",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "sparkJob": {
-                        "referenceName": "Pool Geolocation",
-                        "type": "SparkJobDefinitionReference"
-                    },
-                    "file": "abfss://spark-jobs@synhnscz4wyqsq3e.dfs.core.windows.net/pool_geolocation/src/main.py",
-                    "args": [
-                        "--storage_account_name",
-                        "@pipeline().parameters.StorageAccountName",
-                        "--storage_container",
-                        "@pipeline().parameters.Prefix",
-                        "--src_folder_name",
-                        "detections",
-                        "--key_vault_name",
-                        "kvpcz4wyqsq3e",
-                        "--storage_account_key_secret_name",
-                        "GeospatialStorageAccountKey",
-                        "--linked_service_name",
-                        "AOI Pipeline Key Vault"
-                    ],
-                    "targetBigDataPool": {
-                        "referenceName": "poolcz4wyqsq3e",
-                        "type": "BigDataPoolReference"
-                    },
-                    "executorSize": "Medium",
-                    "conf": {
-                        "spark.dynamicAllocation.minExecutors": 2,
-                        "spark.dynamicAllocation.maxExecutors": 3
-                    },
-                    "driverSize": "Medium",
-                    "numExecutors": 2
-                }
-            },
-            {
-                "name": "Copy Json",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Wait for Custom Vision",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureFileStorageReadSettings",
-                            "recursive": true,
-                            "wildcardFolderPath": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'], '/json')",
-                                "type": "Expression"
-                            },
-                            "wildcardFileName": "*.json",
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureBlobFSWriteSettings"
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "gls",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "gld",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "DestinationFolderPath": "detections",
-                            "DestinationContainerName": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Copy Xml",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Wait for Custom Vision",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureFileStorageReadSettings",
-                            "recursive": true,
-                            "wildcardFolderPath": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'], '/other')",
-                                "type": "Expression"
-                            },
-                            "wildcardFileName": "*.xml",
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureBlobFSWriteSettings"
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "gls",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "gld",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "DestinationFolderPath": "detections",
-                            "DestinationContainerName": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Read Spec Document",
-                "type": "ExecuteDataFlow",
-                "dependsOn": [],
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataflow": {
-                        "referenceName": "ReadSpecDocumentFlow",
-                        "type": "DataFlowReference",
-                        "datasetParameters": {
-                            "source": {
-                                "filename": "custom_vision_object_detection.json",
-                                "folderpath": "config",
-                                "containername": {
-                                    "value": "@pipeline().parameters.Prefix",
-                                    "type": "Expression"
-                                }
-                            }
-                        }
-                    },
-                    "compute": {
-                        "coreCount": 8,
-                        "computeType": "General"
-                    },
-                    "traceLevel": "None",
-                    "cacheSinks": {
-                        "firstRowOnly": true
-                    }
-                }
-            },
-            {
-                "name": "Copy Tiles",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Read Spec Document",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureBlobFSReadSettings",
-                            "maxConcurrentConnections": 15,
-                            "recursive": true,
-                            "wildcardFolderPath": "tiles",
-                            "wildcardFileName": "*.png",
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureFileStorageWriteSettings",
-                            "maxConcurrentConnections": 15
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "run_container",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "container_name": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "folder_path": "tiles"
-                        }
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Copy Config",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Read Spec Document",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureBlobFSReadSettings",
-                            "maxConcurrentConnections": 15,
-                            "recursive": true,
-                            "wildcardFolderPath": "config",
-                            "wildcardFileName": {
-                                "value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
-                                "type": "Expression"
-                            },
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureFileStorageWriteSettings",
-                            "maxConcurrentConnections": 15
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "run_container",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "container_name": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "folder_path": "config"
-                        }
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix)",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Copy Georeference Xml",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Read Spec Document",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureBlobFSReadSettings",
-                            "maxConcurrentConnections": 15,
-                            "recursive": true,
-                            "wildcardFolderPath": "convert",
-                            "wildcardFileName": "*.aux.xml",
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureFileStorageWriteSettings",
-                            "maxConcurrentConnections": 15
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "run_container",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "container_name": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "folder_path": "convert"
-                        }
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Create Results Directory with placeholder",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Read Spec Document",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureBlobFSReadSettings",
-                            "maxConcurrentConnections": 15,
-                            "recursive": true,
-                            "wildcardFolderPath": "config",
-                            "wildcardFileName": {
-                                "value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
-                                "type": "Expression"
-                            },
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureFileStorageWriteSettings",
-                            "maxConcurrentConnections": 15
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "run_container",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "container_name": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "folder_path": "config"
-                        }
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Create Logs Directory with placeholder_copy1",
-                "type": "Copy",
-                "dependsOn": [
-                    {
-                        "activity": "Read Spec Document",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "AzureBlobFSReadSettings",
-                            "maxConcurrentConnections": 15,
-                            "recursive": true,
-                            "wildcardFolderPath": "config",
-                            "wildcardFileName": {
-                                "value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
-                                "type": "Expression"
-                            },
-                            "deleteFilesAfterCompletion": false
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "AzureFileStorageWriteSettings",
-                            "maxConcurrentConnections": 15
-                        }
-                    },
-                    "enableStaging": false
-                },
-                "inputs": [
-                    {
-                        "referenceName": "run_container",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "container_name": {
-                                "value": "@pipeline().parameters.Prefix",
-                                "type": "Expression"
-                            },
-                            "folder_path": "config"
-                        }
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['logsDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Delete Results Directory placeholder",
-                "type": "Delete",
-                "dependsOn": [
-                    {
-                        "activity": "Create Results Directory with placeholder",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataset": {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    },
-                    "logStorageSettings": {
-                        "linkedServiceName": {
-                            "referenceName": "AOI Geospatial",
-                            "type": "LinkedServiceReference"
-                        }
-                    },
-                    "enableLogging": true,
-                    "storeSettings": {
-                        "type": "AzureFileStorageReadSettings",
-                        "recursive": true,
-                        "wildcardFileName": "*.*",
-                        "enablePartitionDiscovery": false
-                    }
-                }
-            },
-            {
-                "name": "Delete Logs Directory placeholder",
-                "type": "Delete",
-                "dependsOn": [
-                    {
-                        "activity": "Create Logs Directory with placeholder_copy1",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataset": {
-                        "referenceName": "run_fileshare",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "folder_path": {
-                                "value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['logsDirectory'])",
-                                "type": "Expression"
-                            }
-                        }
-                    },
-                    "logStorageSettings": {
-                        "linkedServiceName": {
-                            "referenceName": "AOI Geospatial",
-                            "type": "LinkedServiceReference"
-                        }
-                    },
-                    "enableLogging": true,
-                    "storeSettings": {
-                        "type": "AzureFileStorageReadSettings",
-                        "recursive": true,
-                        "wildcardFileName": "*.*",
-                        "enablePartitionDiscovery": false
-                    }
-                }
-            }
-        ],
-        "parameters": {
-            "Prefix": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "BatchName": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "JobName": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "BatchLocation": {
-                "type": "string",
-                "defaultValue": ""
-            },
-            "StorageAccountName": {
-                "type": "string",
-                "defaultValue": ""
-            }
-        },
-        "variables": {
-            "FunctionCompleted": {
-                "type": "String"
-            },
-            "FunctionError": {
-                "type": "String"
-            }
-        },
-        "annotations": [],
-        "lastPublishTime": "2022-03-06T05:52:44Z"
-    },
-    "type": "Microsoft.Synapse/workspaces/pipelines"
+	"name": "Custom Vision Object Detection",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait for Custom Vision",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Custom Vision",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(and(not(equals(string(variables('FunctionCompleted')), 'running')), not(equals(string(variables('FunctionCompleted')), 'active'))), not(equals(string(variables('FunctionCompleted')), 'preparing')))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait for Custom Vision Check",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "Set FunctionCompleted Custom Vision",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 30
+							}
+						},
+						{
+							"name": "Check Status Custom Vision",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@concat('https://',pipeline().parameters.BatchName,'.',pipeline().parameters.BatchLocation,'.batch.azure.com/jobs/',pipeline().parameters.JobName,'/tasks/aoi-cv-task-', pipeline().RunId, '?api-version=2022-01-01.15.0')",
+									"type": "Expression"
+								},
+								"connectVia": {
+									"referenceName": "AutoResolveIntegrationRuntime",
+									"type": "IntegrationRuntimeReference"
+								},
+								"method": "GET",
+								"authentication": {
+									"type": "MSI",
+									"resource": "https://batch.core.windows.net/"
+								}
+							}
+						},
+						{
+							"name": "Set FunctionCompleted Custom Vision",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Check Status Custom Vision",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FunctionCompleted",
+								"value": {
+									"value": "@activity('Check Status Custom Vision').output['state']",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set FunctionError",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Check Status Custom Vision",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FunctionError",
+								"value": {
+									"value": "@activity('Check Status Custom Vision').output['executionInfo']['failureInfo']",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			},
+			{
+				"name": "Custom Vision",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy Tiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy Config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy Georeference Xml",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Delete Results Directory placeholder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Delete Logs Directory placeholder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://',pipeline().parameters.BatchName,'.',pipeline().parameters.BatchLocation,'.batch.azure.com/jobs/',pipeline().parameters.JobName,'/tasks?api-version=2020-03-01.11.0')",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json; odata=minimalmetadata; charset=utf-8"
+					},
+					"body": {
+						"value": "@json(concat('{\n  \"id\": \"aoi-cv-task-', pipeline().RunId, '\",\n  \"commandLine\": \"\",\n  \"containerSettings\": {\n    \"imageName\": \"', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['algImageName'], '\",\n    \"containerRunOptions\": \"--rm --workdir / -v /mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix, ':', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['mountedDirectory'], '\"\n  },\n  \"environmentSettings\": [\n      {\n          \"name\": \"APP_INPUT_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'],'\"\n      },\n      {\n          \"name\": \"APP_OUTPUT_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'],'\"\n      },\n      {\n          \"name\": \"APP_CONFIG_DIR\",\n          \"value\": \"/mnt/batch/tasks/fsmounts/S/', pipeline().parameters.Prefix,'/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName'],'\"\n      }\n  ]\n}'))",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://batch.core.windows.net/"
+					}
+				}
+			},
+			{
+				"name": "Pool Geolocation",
+				"type": "SparkJob",
+				"dependsOn": [
+					{
+						"activity": "Copy Xml",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy Json",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"sparkJob": {
+						"referenceName": "Pool Geolocation",
+						"type": "SparkJobDefinitionReference"
+					},
+					"file": "abfss://spark-jobs@synhnscz4wyqsq3e.dfs.core.windows.net/pool_geolocation/src/main.py",
+					"args": [
+						"--storage_account_name",
+						"@pipeline().parameters.StorageAccountName",
+						"--storage_container",
+						"@pipeline().parameters.Prefix",
+						"--src_folder_name",
+						"detections",
+						"--key_vault_name",
+						"kvpcz4wyqsq3e",
+						"--storage_account_key_secret_name",
+						"GeospatialStorageAccountKey",
+						"--linked_service_name",
+						"AOI Pipeline Key Vault"
+					],
+					"targetBigDataPool": {
+						"referenceName": "poolcz4wyqsq3e",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": "Medium",
+					"conf": {
+						"spark.dynamicAllocation.minExecutors": 2,
+						"spark.dynamicAllocation.maxExecutors": 3
+					},
+					"driverSize": "Medium",
+					"numExecutors": 2
+				}
+			},
+			{
+				"name": "Copy Json",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Wait for Custom Vision",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureFileStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'], '/json')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.json",
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "gls",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "gld",
+						"type": "DatasetReference",
+						"parameters": {
+							"DestinationFolderPath": "detections",
+							"DestinationContainerName": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Xml",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Wait for Custom Vision",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureFileStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'], '/other')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.xml",
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "gls",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "gld",
+						"type": "DatasetReference",
+						"parameters": {
+							"DestinationFolderPath": "detections",
+							"DestinationContainerName": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Read Spec Document",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "ReadSpecDocumentFlow",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source": {
+								"filename": "custom_vision_object_detection.json",
+								"folderpath": "config",
+								"containername": {
+									"value": "@pipeline().parameters.Prefix",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			},
+			{
+				"name": "Copy Tiles",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Read Spec Document",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"maxConcurrentConnections": 15,
+							"recursive": true,
+							"wildcardFolderPath": "tiles",
+							"wildcardFileName": "*.png",
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureFileStorageWriteSettings",
+							"maxConcurrentConnections": 15
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "run_container",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							},
+							"folder_path": "tiles"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'])",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Config",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Read Spec Document",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"maxConcurrentConnections": 15,
+							"recursive": true,
+							"wildcardFolderPath": "config",
+							"wildcardFileName": {
+								"value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
+								"type": "Expression"
+							},
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureFileStorageWriteSettings",
+							"maxConcurrentConnections": 15
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "run_container",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							},
+							"folder_path": "config"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Georeference Xml",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Read Spec Document",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"maxConcurrentConnections": 15,
+							"recursive": true,
+							"wildcardFolderPath": "convert",
+							"wildcardFileName": "*.aux.xml",
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureFileStorageWriteSettings",
+							"maxConcurrentConnections": 15
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "run_container",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							},
+							"folder_path": "convert"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['submissionDirectory'])",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create Results Directory with placeholder",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Read Spec Document",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"maxConcurrentConnections": 15,
+							"recursive": true,
+							"wildcardFolderPath": "config",
+							"wildcardFileName": {
+								"value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
+								"type": "Expression"
+							},
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureFileStorageWriteSettings",
+							"maxConcurrentConnections": 15
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "run_container",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							},
+							"folder_path": "config"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'])",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create Logs Directory with placeholder_copy1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Read Spec Document",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"maxConcurrentConnections": 15,
+							"recursive": true,
+							"wildcardFolderPath": "config",
+							"wildcardFileName": {
+								"value": "@activity('Read Spec Document').output['runStatus'].output.sink.value[0]['contextFileName']",
+								"type": "Expression"
+							},
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureFileStorageWriteSettings",
+							"maxConcurrentConnections": 15
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "run_container",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.Prefix",
+								"type": "Expression"
+							},
+							"folder_path": "config"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['logsDirectory'])",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete Results Directory placeholder",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Create Results Directory with placeholder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['resultsDirectory'])",
+								"type": "Expression"
+							}
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AOI Geospatial",
+							"type": "LinkedServiceReference"
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureFileStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.*",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete Logs Directory placeholder",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Create Logs Directory with placeholder_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "run_fileshare",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat(pipeline().parameters.Prefix, '/', activity('Read Spec Document').output['runStatus'].output.sink.value[0]['logsDirectory'])",
+								"type": "Expression"
+							}
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AOI Geospatial",
+							"type": "LinkedServiceReference"
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureFileStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.*",
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Prefix": {
+				"type": "string"
+			},
+			"BatchName": {
+				"type": "string"
+			},
+			"JobName": {
+				"type": "string"
+			},
+			"BatchLocation": {
+				"type": "string"
+			},
+			"StorageAccountName": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"FunctionCompleted": {
+				"type": "String"
+			},
+			"FunctionError": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-06T05:52:44Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
 }
